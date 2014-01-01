@@ -27,16 +27,16 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                // XXX i18n?
-                text: "New Game"
-                onClicked: pageStack.push(Qt.resolvedUrl("SetupNewGamePage.qml"))
-            }
-
-            MenuItem {
                 text: "Continue Game"
                 // XXX enable if we have a game
                 enabled: false
                 onClicked: console.log("Continue Game")
+            }
+
+            MenuItem {
+                // XXX i18n?
+                text: "New Game"
+                onClicked: pageStack.push(Qt.resolvedUrl("SetupNewGamePage.qml"))
             }
         }
 
