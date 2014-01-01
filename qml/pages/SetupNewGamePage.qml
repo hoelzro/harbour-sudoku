@@ -19,13 +19,22 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Dialog {
-    ComboBox {
-        id: difficultyField
-        label: "Difficulty"
-        menu: ContextMenu {
-            MenuItem { text: "Easy" }
-            MenuItem { text: "Medium" }
-            MenuItem { text: "Hard" }
+    Column {
+        spacing: Theme.paddingLarge
+        anchors.fill: parent
+
+        DialogHeader {
+            title: "New Game"
+        }
+
+        ComboBox {
+            id: difficultyField
+            label: "Difficulty"
+            menu: ContextMenu {
+                MenuItem { text: "Easy" }
+                MenuItem { text: "Medium" }
+                MenuItem { text: "Hard" }
+            }
         }
     }
 
