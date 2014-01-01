@@ -6,6 +6,7 @@ HEADERS       +=
 desktop.files += harbour-sudoku.desktop
 OTHER_FILES   += \
     qml/pages/LaunchPage.qml \
+    qml/pages/SetupNewGamePage.qml \
     qml/harbour-sudoku.qml \
     rpm/harbour-sudoku.spec \
     rpm/harbour-sudoku.yaml \

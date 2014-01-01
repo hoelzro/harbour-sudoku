@@ -18,36 +18,18 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Page {
-    id: page
-
-    SilicaFlickable {
-        anchors.fill: parent
-        contentHeight: childrenRect.height
-
-        PullDownMenu {
-            MenuItem {
-                // XXX i18n?
-                text: "New Game"
-                onClicked: pageStack.push(Qt.resolvedUrl("SetupNewGamePage.qml"))
-            }
-
-            MenuItem {
-                text: "Continue Game"
-                // XXX enable if we have a game
-                enabled: false
-                onClicked: console.log("Continue Game")
-            }
+Dialog {
+    ComboBox {
+        id: difficultyField
+        label: "Difficulty"
+        menu: ContextMenu {
+            MenuItem { text: "Easy" }
+            MenuItem { text: "Medium" }
+            MenuItem { text: "Hard" }
         }
+    }
 
-        Column {
-            id: column
-            width: page.width
-            spacing: Theme.paddingLarge
-
-            PageHeader {
-                title: "Sudoku"
-            }
-        }
+    onAccepted: {
+        console.log("difficulty: " + difficultyField.value);
     }
 }
