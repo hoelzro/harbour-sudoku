@@ -1,0 +1,7 @@
+/Makefile
+/RPMS/
+/documentation.list
+/harbour-sudoku
+
+*.o
+*.spec
