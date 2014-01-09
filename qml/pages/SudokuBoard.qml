@@ -26,6 +26,12 @@ Grid {
     property int cellSize
     property variant _currentSelection: null
 
+    function updateSelection(value) {
+        if(_currentSelection) {
+            _currentSelection.value = value;
+        }
+    }
+
     Repeater {
         model: 9
 
