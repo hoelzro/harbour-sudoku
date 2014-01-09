@@ -16,6 +16,7 @@
 */
 
 import QtQuick 2.0
+import Sailfish.Silica 1.0
 
 Rectangle {
     property int cellSize
@@ -25,8 +26,9 @@ Rectangle {
 
     width: cellSize * 3
     height: cellSize * 3
+    color: "transparent"
 
-    border.color: "black"
+    border.color: Theme.secondaryColor
     border.width: 2
 
     Grid {
@@ -41,8 +43,9 @@ Rectangle {
                 id: self
                 width: cellSize
                 height: cellSize
-                border.color: isHighlighted ? "red" : "grey"
+                border.color: isHighlighted ? Theme.highlightColor : Theme.primaryColor
                 border.width: isHighlighted ? 2 : 1
+                color: "transparent"
 
                 property bool isHighlighted: false
                 property int row:    Math.floor(blockNumber / 3) * 3 + Math.floor(index / 3)
@@ -51,6 +54,7 @@ Rectangle {
 
                 Text {
                     anchors.centerIn: parent
+                    color: Theme.primaryColor
 
                     text: value == null ? '' : '' + value
                 }

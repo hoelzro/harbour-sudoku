@@ -21,7 +21,7 @@ import "."
 Grid {
     rows: 3
     columns: 3
-    spacing: 2
+    spacing: 5
 
     property int cellSize
     property variant _currentSelection: null
