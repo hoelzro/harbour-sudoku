@@ -24,6 +24,7 @@ Grid {
     spacing: 0
 
     property int cellSize
+    property variant _currentSelection: null
 
     Repeater {
         model: 9
@@ -31,6 +32,14 @@ Grid {
         SudokuBlock {
             cellSize: parent.cellSize
             blockNumber: index
+
+            onCellSelected: {
+                if(_currentSelection) {
+                    _currentSelection.isHighlighted = false
+                }
+                _currentSelection = cell
+                cell.isHighlighted = true;
+            }
         }
     }
 }
