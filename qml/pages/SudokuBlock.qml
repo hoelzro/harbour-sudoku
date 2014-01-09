@@ -41,7 +41,8 @@ Rectangle {
                 id: self
                 width: cellSize
                 height: cellSize
-                border.color: "grey"
+                border.color: isHighlighted ? "red" : "grey"
+                border.width: isHighlighted ? 2 : 1
 
                 property bool isHighlighted: false
                 property int row:    Math.floor(blockNumber / 3) * 3 + Math.floor(index / 3)
