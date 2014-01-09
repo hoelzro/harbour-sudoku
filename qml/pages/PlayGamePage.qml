@@ -22,17 +22,21 @@ import "."
 Page {
     SilicaFlickable {
         anchors.fill: parent
-        contentHeight: childrenRect.height
 
         Column {
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: 20
+
             SudokuBoard {
                 id: board
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: parent.top + 10
+                anchors.topMargin: 10
+
                 cellSize: 50
             }
 
             NumberInput {
+                anchors.horizontalCenter: parent.horizontalCenter
+
                 onEntry: {
                     board.updateSelection(value);
                 }
