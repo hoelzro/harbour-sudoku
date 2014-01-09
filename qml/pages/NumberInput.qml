@@ -16,32 +16,25 @@
 */
 
 import QtQuick 2.0
+import Sailfish.Silica 1.0
 
 Grid {
     rows: 3
     columns: 3
+    spacing: 10
 
     signal entry(int value)
 
     Repeater {
         model: 9
 
-        Rectangle {
-            width: 40
-            height: 40
-            border.color: "black"
+        Button {
+            width: 120
+            height: width
+            text: index + 1
 
-            Text {
-                anchors.centerIn: parent
-                text: index + 1
-                color: "black"
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    entry(index + 1);
-                }
+            onClicked: {
+                entry(index + 1);
             }
         }
     }
