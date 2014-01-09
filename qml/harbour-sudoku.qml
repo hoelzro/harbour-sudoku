@@ -20,5 +20,5 @@ import Sailfish.Silica 1.0
 import "pages"
 
 ApplicationWindow {
-    initialPage: Component { LaunchPage { } }
+    initialPage: Component { PlayGamePage { } }
 }
