@@ -21,6 +21,8 @@ Rectangle {
     property int cellSize
     property int blockNumber
 
+    signal cellSelected (variant cell)
+
     width: cellSize * 3
     height: cellSize * 3
 
@@ -36,6 +38,7 @@ Rectangle {
             model: 9
 
             Rectangle {
+                id: self
                 width: cellSize
                 height: cellSize
                 border.color: "grey"
@@ -45,7 +48,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: console.log('click (' + row + ', ' + column + ')')
+                    onClicked: cellSelected(self)
                 }
             }
         }
