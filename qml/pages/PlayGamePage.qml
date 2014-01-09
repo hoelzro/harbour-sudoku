@@ -26,9 +26,16 @@ Page {
 
         Column {
             SudokuBoard {
+                id: board
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top + 10
                 cellSize: 50
+            }
+
+            NumberInput {
+                onEntry: {
+                    board.updateSelection(value);
+                }
             }
         }
     }
