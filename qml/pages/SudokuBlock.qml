@@ -47,6 +47,13 @@ Rectangle {
                 property bool isHighlighted: false
                 property int row:    Math.floor(blockNumber / 3) * 3 + Math.floor(index / 3)
                 property int column: (blockNumber % 3) * 3 + (index % 3)
+                property variant value: null
+
+                Text {
+                    anchors.centerIn: parent
+
+                    text: value == null ? '' : '' + value
+                }
 
                 MouseArea {
                     anchors.fill: parent
