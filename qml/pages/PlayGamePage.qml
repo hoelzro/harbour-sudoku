@@ -22,6 +22,7 @@ import "."
 Page {
     SilicaFlickable {
         anchors.fill: parent
+        anchors.topMargin: 40
 
         Column {
             anchors.horizontalCenter: parent.horizontalCenter
