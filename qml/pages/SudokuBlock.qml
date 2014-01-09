@@ -43,6 +43,7 @@ Rectangle {
                 height: cellSize
                 border.color: "grey"
 
+                property bool isHighlighted: false
                 property int row:    Math.floor(blockNumber / 3) * 3 + Math.floor(index / 3)
                 property int column: (blockNumber % 3) * 3 + (index % 3)
 
