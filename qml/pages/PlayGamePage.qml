@@ -17,98 +17,19 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "."
 
 Page {
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: childrenRect.height
 
-        Grid {
-            columns: 9
-            spacing: 0
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
-            Rectangle { color: Theme.secondaryColor; opacity: 0.4; border.color: "white"; border.width: 1; width: 50; height: 50; Label { anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; text: "0" } }
+        Column {
+            SudokuBoard {
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top + 10
+                cellSize: 50
+            }
         }
     }
 }
