@@ -44,7 +44,7 @@ Rectangle {
                 width: cellSize
                 height: cellSize
                 border.color: isHighlighted ? Theme.highlightColor : Theme.primaryColor
-                border.width: isHighlighted ? 2 : 1
+                border.width: isHighlighted ? 5 : 1
                 color: "transparent"
 
                 property bool isHighlighted: false
