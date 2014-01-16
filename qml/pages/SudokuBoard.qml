@@ -17,6 +17,7 @@
 
 import QtQuick 2.0
 import "."
+import "Sudoku.js" as S
 
 Grid {
     rows: 3
@@ -25,6 +26,7 @@ Grid {
 
     property int cellSize
     property variant _currentSelection: null
+    property int modelId: null
 
     function updateSelection(value) {
         if(_currentSelection) {
@@ -33,6 +35,7 @@ Grid {
     }
 
     Repeater {
+        id: blocks
         model: 9
 
         SudokuBlock {
@@ -45,6 +48,40 @@ Grid {
                 }
                 _currentSelection = cell
                 cell.isHighlighted = true;
+            }
+        }
+    }
+
+    function getBlockForCoords(row, col) {
+        var blockNo  = Math.floor(col / 3) + (row - row % 3);
+        var blockRow = row % 3;
+        var blockCol = col % 3;
+
+        return [
+            blocks.itemAt(blockNo),
+            blockRow,
+            blockCol
+        ];
+    }
+
+    Component.onCompleted: {
+        modelId = S.makeSudoku();
+        var s = S.getSudoku(modelId);
+
+        for(var row = 0; row < 9; row++) {
+            for(var col = 0; col < 9; col++) {
+                var value = s.get(row, col);
+
+                if(value === null) {
+                    continue;
+                }
+
+                var data  = getBlockForCoords(row, col);
+                var block = data[0];
+                var bRow  = data[1];
+                var bCol  = data[2];
+
+                block.set(bRow, bCol, value);
             }
         }
     }

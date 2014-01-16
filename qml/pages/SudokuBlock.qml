@@ -37,6 +37,7 @@ Rectangle {
         spacing: 0
 
         Repeater {
+            id: cells
             model: 9
 
             Rectangle {
@@ -65,5 +66,12 @@ Rectangle {
                 }
             }
         }
+    }
+
+    function set(row, col, value) {
+        var index = row * 3 + col;
+
+        // XXX can we update the current binding?
+        cells.itemAt(index).value = Qt.binding(function() { return value; });
     }
 }
