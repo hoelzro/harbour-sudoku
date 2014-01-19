@@ -81,7 +81,6 @@ Grid {
         var conflicts = s.getConflicts();
 
         for(var i = 0; i < conflicts.length; i++) {
-            console.log('conflict at (' + conflicts[i].row + ', ' + conflicts[i].col + ')');
             var data = getBlockForCoords(conflicts[i].row, conflicts[i].col);
 
             var block = data[0];
