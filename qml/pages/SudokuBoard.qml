@@ -64,6 +64,11 @@ Grid {
         ];
     }
 
+    function isGameOver() {
+        // XXX stub
+        return true;
+    }
+
     Component.onCompleted: {
         modelId = S.makeSudoku();
         var s = S.getSudoku(modelId);

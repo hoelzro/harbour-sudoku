@@ -40,6 +40,10 @@ Page {
 
                 onEntry: {
                     board.updateSelection(value);
+
+                    if(board.isGameOver()) {
+                        console.log('game over!');
+                    }
                 }
             }
         }
