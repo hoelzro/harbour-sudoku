@@ -22,10 +22,10 @@ import "."
 Page {
     SilicaFlickable {
         anchors.fill: parent
-        anchors.topMargin: 40
 
         Column {
             anchors.horizontalCenter: parent.horizontalCenter
+            y: 40
             spacing: 20
 
             SudokuBoard {
