@@ -42,7 +42,7 @@ Page {
                     board.updateSelection(value);
 
                     if(board.isGameOver()) {
-                        console.log('game over!');
+                        pageStack.replace(Qt.resolvedUrl('Victory.qml'));
                     }
                 }
             }
