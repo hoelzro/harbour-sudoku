@@ -72,8 +72,8 @@ Grid {
     }
 
     function isGameOver() {
-        // XXX stub
-        return true;
+        var s = S.getSudoku(modelId);
+        return s.isGameOver();
     }
 
     function showConflicts() {

@@ -466,6 +466,14 @@ var Sudoku = (function() {
         return conflicts;
     };
 
+    Sudoku.prototype.isGameOver = function isGameOver() {
+        var emptyCells = ArrayUtils.grep(ArrayUtils.flatten(this.cells), function(cell) {
+            return cell.getValue() == null;
+        });
+
+        return emptyCells.length == 0 && this.getConflicts().length == 0;
+    };
+
     return Sudoku;
 })();
 
