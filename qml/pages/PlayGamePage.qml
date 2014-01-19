@@ -65,6 +65,9 @@ Page {
 
             MenuItem {
                 text: "Give Me a Hint"
+                onClicked: {
+                    board.giveHint();
+                }
             }
 
             MenuItem {

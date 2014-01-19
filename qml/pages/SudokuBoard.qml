@@ -91,6 +91,28 @@ Grid {
         }
     }
 
+    function giveHint() {
+        var s    = S.getSudoku(modelId);
+        var hint = s.getHint();
+
+        if(hint == null) {
+            return;
+        }
+
+        var data = getBlockForCoords(hint.row, hint.col);
+
+        var block = data[0];
+        var bRow  = data[1];
+        var bCol  = data[2];
+
+        if(_currentSelection) {
+            _currentSelection.isHighlighted = false;
+        }
+        _currentSelection = block.getCell(bRow, bCol);
+        _currentSelection.isHighlighted = true;
+        updateSelection(hint.value);
+    }
+
     Component.onCompleted: {
         modelId = S.makeSudoku();
         var s = S.getSudoku(modelId);

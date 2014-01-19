@@ -89,4 +89,10 @@ Rectangle {
             }
         }
     }
+
+    function getCell(row, col) {
+        var index = row * 3 + col;
+
+        return cells.itemAt(index);
+    }
 }
