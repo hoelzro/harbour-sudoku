@@ -289,7 +289,7 @@ var Sudoku = (function() {
             var relations = new Set(ArrayUtils.flatten([
                 ArrayUtils.grep(rowToCells[ cell.getRow() ],    function(otherCell) { return cell.getBlock() != otherCell.getBlock() }),
                 ArrayUtils.grep(colToCells[ cell.getColumn() ], function(otherCell) { return cell.getBlock() != otherCell.getBlock() }),
-                blockToCells[ cell.getBlock() ]
+                ArrayUtils.grep(blockToCells[ cell.getBlock() ], function(otherCell) { return cell != otherCell })
             ]));
 
             related[cell] = relations;
