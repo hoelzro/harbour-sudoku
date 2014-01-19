@@ -474,6 +474,51 @@ var Sudoku = (function() {
         return emptyCells.length == 0 && this.getConflicts().length == 0;
     };
 
+    // XXX lots of code duplication between here and solve =(
+    Sudoku.prototype.getHint = function getHint() {
+        var cells          = ArrayUtils.flatten(this.cells);
+        var possibleValues = {};
+
+        var classified = ArrayUtils.classify(cells, function(value) {
+            return value.getValue() === null ? 0 : 1;
+        });
+        var emptyCells    = classified[0];
+        var nonEmptyCells = classified[1];
+
+        for(var i = 0; i < emptyCells.length; i++) {
+            var cell = emptyCells[i];
+
+            possibleValues[cell] = ArrayUtils.range(1, GRID_SIZE);
+        }
+
+        var relatedCells = findRelatedCells(cells);
+
+        for(var i = 0; i < nonEmptyCells.length; i++) {
+            var cell      = nonEmptyCells[i];
+            var related   = relatedCells[cell];
+            var cellValue = cell.getValue();
+
+            related.forEach(function(otherCell) {
+                if(otherCell in possibleValues) {
+                    possibleValues[otherCell] = ArrayUtils.grep(possibleValues[otherCell], function(value) {
+                        return value != cellValue;
+                    });
+                }
+            });
+        }
+
+        var cellLookup = {};
+        for(var i = 0; i < cells.length; i++) {
+            cellLookup[ cells[i] ] = cells[i];
+        }
+
+        var minPair = ArrayUtils.min(HashUtils.pairs(possibleValues), function(pair) { return pair.value.length });
+        var minCell = cellLookup[ minPair.key ];
+        var choices = minPair.value;
+
+        return choices.length == 1 ? { row: minCell.getRow(), col: minCell.getColumn(), value: choices[0] } : null;
+    };
+
     return Sudoku;
 })();
 
