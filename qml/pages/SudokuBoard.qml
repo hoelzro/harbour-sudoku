@@ -115,34 +115,32 @@ Grid {
     }
 
     function restore() {
-        return [
-            { row: 0,       column: 0,       value: 5 },
-            { row: 0,       column: 2,       value: 3 },
-            { row: 0,       column: 6,       value: 9 },
-            { row: 0,       column: 7,       value: 6 },
-            { row: 1,       column: 0,       value: 4 },
-            { row: 1,       column: 3,       value: 2 },
-            { row: 1,       column: 4,       value: 8 },
-            { row: 1,       column: 7,       value: 5 },
-            { row: 1,       column: 8,       value: 7 },
-            { row: 2,       column: 8,       value: 3 },
-            { row: 3,       column: 8,       value: 2 },
-            { row: 4,       column: 0,       value: 3 },
-            { row: 4,       column: 1,       value: 4 },
-            { row: 4,       column: 6,       value: 5 },
-            { row: 4,       column: 7,       value: 9 },
-            { row: 5,       column: 0,       value: 8 },
-            { row: 5,       column: 5,       value: 1 },
-            { row: 5,       column: 6,       value: 3 },
-            { row: 5,       column: 7,       value: 4 },
-            { row: 5,       column: 8,       value: 6 },
-            { row: 6,       column: 2,       value: 6 },
-            { row: 6,       column: 3,       value: 1 },
-            { row: 6,       column: 6,       value: 7 },
-            { row: 7,       column: 0,       value: 1 },
-            { row: 8,       column: 2,       value: 4 },
-            { row: 8,       column: 7,       value: 1 }
-        ];
+        var db = LocalStorage.openDatabaseSync('harbour-sudoku', '1.0', 'Saved Game Data for Sudoku', 2000);
+
+        var rows = [];
+
+        try {
+            db.transaction(function(txn) {
+                var result = txn.executeSql('SELECT row, column, value FROM board');
+
+                for(var i = 0; i < result.rows.length; i++) {
+                    var row = result.rows.item(i);
+                    rows.push({
+                        row: row.row,
+                        column: row.column,
+                        value: row.value
+                    });
+                }
+            });
+        } catch(e) {
+            var code = e.code;
+
+            if(code !== SQLException.DATABASE_ERR) {
+                throw e;
+            }
+        }
+
+        return rows.length == 0 ? null : rows;
     }
 
     function save() {
