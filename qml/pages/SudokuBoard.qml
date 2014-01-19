@@ -16,6 +16,7 @@
 */
 
 import QtQuick 2.0
+import QtQuick.LocalStorage 2.0
 import "."
 import "Sudoku.js" as S
 
@@ -111,6 +112,26 @@ Grid {
         _currentSelection = block.getCell(bRow, bCol);
         _currentSelection.isHighlighted = true;
         updateSelection(hint.value);
+    }
+
+    function save() {
+        var db = LocalStorage.openDatabaseSync('harbour-sudoku', '1.0', 'Saved Game Data for Sudoku', 2000);
+        var s  = S.getSudoku(modelId);
+
+        db.transaction(function(txn) {
+            txn.executeSql('CREATE TABLE IF NOT EXISTS board (row INTEGER NOT NULL, column INTEGER NOT NULL, value INTEGER NOT NULL)');
+            txn.executeSql('DELETE FROM board');
+
+            for(var row = 0; row < 9; row++) {
+                for(var col = 0; col < 9; col++) {
+                    var value = s.get(row, col);
+
+                    if(value != null) {
+                        txn.executeSql('INSERT INTO board VALUES (?, ?, ?)', [ row, col, value ]);
+                    }
+                }
+            }
+        });
     }
 
     Component.onCompleted: {

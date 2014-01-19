@@ -78,4 +78,8 @@ Page {
             }
         }
     }
+
+    Component.onDestruction: {
+        board.save();
+    }
 }
