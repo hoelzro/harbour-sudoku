@@ -46,12 +46,13 @@ Rectangle {
                 height: cellSize
                 border.color: isHighlighted ? Theme.highlightColor : Theme.primaryColor
                 border.width: isHighlighted ? 5 : 1
-                color: "transparent"
+                color: isConflict ? Theme.secondaryHighlightColor : "transparent"
 
                 property bool isHighlighted: false
                 property int row:    Math.floor(blockNumber / 3) * 3 + Math.floor(index / 3)
                 property int column: (blockNumber % 3) * 3 + (index % 3)
                 property variant value: null
+                property bool isConflict: false
 
                 Text {
                     anchors.centerIn: parent
@@ -73,5 +74,10 @@ Rectangle {
 
         // XXX can we update the current binding?
         cells.itemAt(index).value = Qt.binding(function() { return value; });
+    }
+
+    function markAsConflict(row, col) {
+        var index = row * 3 + col;
+        cells.itemAt(index).isConflict = true;
     }
 }

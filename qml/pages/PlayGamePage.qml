@@ -69,6 +69,9 @@ Page {
 
             MenuItem {
                 text: "Show Conflicts"
+                onClicked: {
+                    board.showConflicts();
+                }
             }
         }
     }

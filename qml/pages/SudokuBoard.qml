@@ -69,6 +69,22 @@ Grid {
         return true;
     }
 
+    function showConflicts() {
+        var s         = S.getSudoku(modelId);
+        var conflicts = s.getConflicts();
+
+        for(var i = 0; i < conflicts.length; i++) {
+            console.log('conflict at (' + conflicts[i].row + ', ' + conflicts[i].col + ')');
+            var data = getBlockForCoords(conflicts[i].row, conflicts[i].col);
+
+            var block = data[0];
+            var bRow  = data[1];
+            var bCol  = data[2];
+
+            block.markAsConflict(bRow, bCol);
+        }
+    }
+
     Component.onCompleted: {
         modelId = S.makeSudoku();
         var s = S.getSudoku(modelId);
