@@ -43,5 +43,23 @@ Page {
                 }
             }
         }
+
+        PullDownMenu {
+            MenuItem {
+                text: "About This App"
+            }
+
+            MenuItem {
+                text: "New Game"
+            }
+
+            MenuItem {
+                text: "Give Me a Hint"
+            }
+
+            MenuItem {
+                text: "Show Conflicts"
+            }
+        }
     }
 }
