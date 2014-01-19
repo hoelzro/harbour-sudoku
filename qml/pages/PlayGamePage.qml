@@ -39,7 +39,7 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 onEntry: {
-                    board.updateSelection(value);
+                    board.updateSelection(value == 0 ? null : value);
 
                     if(board.isGameOver()) {
                         pageStack.replace(Qt.resolvedUrl('Victory.qml'));

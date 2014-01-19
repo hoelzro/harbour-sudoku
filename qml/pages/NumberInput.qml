@@ -49,5 +49,9 @@ Grid {
         width: 90
         height: width
         text: 'Erase'
+
+        onClicked: {
+            entry(0);
+        }
     }
 }
