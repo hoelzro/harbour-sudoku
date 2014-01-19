@@ -435,6 +435,13 @@ var Sudoku = (function() {
         digOut(this, DIFFICULTIES[difficulty]);
     };
 
+    Sudoku.prototype.getConflicts = function getConflicts() {
+        return [{
+            row: 6,
+            col: 5
+        }];
+    };
+
     return Sudoku;
 })();
 
