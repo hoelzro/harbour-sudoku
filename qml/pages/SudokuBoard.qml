@@ -163,6 +163,29 @@ Grid {
         });
     }
 
+    function reset() {
+        // XXX code duplication =(
+        modelId = S.makeSudoku();
+        var s = S.getSudoku(modelId);
+
+        for(var row = 0; row < 9; row++) {
+            for(var col = 0; col < 9; col++) {
+                var value = s.get(row, col);
+
+                if(value === null) {
+                    continue;
+                }
+
+                var data  = getBlockForCoords(row, col);
+                var block = data[0];
+                var bRow  = data[1];
+                var bCol  = data[2];
+
+                block.set(bRow, bCol, value);
+            }
+        }
+    }
+
     Component.onCompleted: {
         var rows = restore();
 
