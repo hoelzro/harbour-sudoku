@@ -30,6 +30,10 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: 'New Game'
+
+                onClicked: {
+                    pageStack.replace(Qt.resolvedUrl('PlayGamePage.qml'));
+                }
             }
         }
     }
