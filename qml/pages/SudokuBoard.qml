@@ -31,6 +31,9 @@ Grid {
     function updateSelection(value) {
         if(_currentSelection) {
             _currentSelection.value = value;
+
+            var s = S.getSudoku(modelId);
+            s.set(_currentSelection.row, _currentSelection.column, value);
         }
 
         for(var block_no = 0; block_no < 9; block_no++) {
