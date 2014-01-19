@@ -522,7 +522,7 @@ var Sudoku = (function() {
     return Sudoku;
 })();
 
-var sudokuObjects = [];
+var sudokuObject;
 
 function makeSudoku(rows) {
     var s = new Sudoku();
@@ -535,10 +535,10 @@ function makeSudoku(rows) {
         s.generate(0);
     }
 
-    sudokuObjects.push(s);
-    return sudokuObjects.length - 1;
+    sudokuObject = s;
+    return 0;
 }
 
 function getSudoku(id) {
-    return sudokuObjects[id];
+    return sudokuObject;
 }
