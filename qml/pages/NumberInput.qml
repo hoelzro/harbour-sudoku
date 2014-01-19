@@ -19,7 +19,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Grid {
-    rows: 3
+    rows: 4
     columns: 3
     spacing: 10
 
@@ -29,7 +29,7 @@ Grid {
         model: 9
 
         Button {
-            width: 120
+            width: 90
             height: width
             text: index + 1
 
@@ -37,5 +37,17 @@ Grid {
                 entry(index + 1);
             }
         }
+    }
+
+    Label {
+        width: 90
+        height: width
+        text: ''
+    }
+
+    Button {
+        width: 90
+        height: width
+        text: 'Erase'
     }
 }
