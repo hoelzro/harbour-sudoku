@@ -524,9 +524,16 @@ var Sudoku = (function() {
 
 var sudokuObjects = [];
 
-function makeSudoku() {
+function makeSudoku(rows) {
     var s = new Sudoku();
-    s.generate(0);
+
+    if(rows) {
+        for(var i = 0; i < rows.length; i++) {
+            s.set(rows[i].row, rows[i].column, rows[i].value);
+        }
+    } else {
+        s.generate(0);
+    }
 
     sudokuObjects.push(s);
     return sudokuObjects.length - 1;

@@ -166,7 +166,9 @@ Grid {
     }
 
     Component.onCompleted: {
-        modelId = S.makeSudoku();
+        var rows = restore();
+
+        modelId = S.makeSudoku(rows);
         var s = S.getSudoku(modelId);
 
         for(var row = 0; row < 9; row++) {
