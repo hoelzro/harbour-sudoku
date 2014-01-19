@@ -436,10 +436,34 @@ var Sudoku = (function() {
     };
 
     Sudoku.prototype.getConflicts = function getConflicts() {
-        return [{
-            row: 6,
-            col: 5
-        }];
+        var relatedCellLookup = findRelatedCells(ArrayUtils.flatten(this.cells));
+        var nonEmptyCells     = ArrayUtils.grep(ArrayUtils.flatten(this.cells), function(cell) {
+            return cell.getValue() != null;
+        });
+
+        var conflicts = [];
+
+        for(var i = 0; i < nonEmptyCells.length; i++) {
+            var value = nonEmptyCells[i].getValue();
+            var isConflicting = false;
+
+            relatedCellLookup[ nonEmptyCells[i] ].forEach(function(cell) {
+                var otherValue = cell.getValue();
+
+                if(otherValue === value) {
+                    isConflicting = true;
+                }
+            });
+
+            if(isConflicting) {
+                conflicts.push({
+                    row: nonEmptyCells[i].getRow(),
+                    col: nonEmptyCells[i].getColumn()
+                });
+            }
+        }
+
+        return conflicts;
     };
 
     return Sudoku;
