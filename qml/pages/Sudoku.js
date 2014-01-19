@@ -339,7 +339,7 @@ var Sudoku = (function() {
     };
 
     var DIFFICULTIES = [
-        ArrayUtils.range(20, 30),
+        ArrayUtils.range(30, 40),
     ];
 
     var digOut = function digOut(s, difficulty) {
