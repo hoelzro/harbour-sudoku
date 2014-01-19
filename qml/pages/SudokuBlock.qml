@@ -80,4 +80,13 @@ Rectangle {
         var index = row * 3 + col;
         cells.itemAt(index).isConflict = true;
     }
+
+    function clearConflictMarks() {
+        for(var row = 0; row < 3; row++) {
+            for(var col = 0; col < 3; col++) {
+                var index = row * 3 + col;
+                cells.itemAt(index).isConflict = false;
+            }
+        }
+    }
 }

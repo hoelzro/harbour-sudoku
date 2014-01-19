@@ -32,6 +32,10 @@ Grid {
         if(_currentSelection) {
             _currentSelection.value = value;
         }
+
+        for(var block_no = 0; block_no < 9; block_no++) {
+            blocks.itemAt(block_no).clearConflictMarks();
+        }
     }
 
     Repeater {
