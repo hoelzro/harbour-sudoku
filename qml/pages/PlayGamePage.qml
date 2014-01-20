@@ -43,10 +43,6 @@ Page {
 
                 onEntry: {
                     board.updateSelection(value == 0 ? null : value);
-
-                    if(board.isGameOver()) {
-                        pageStack.replace(Qt.resolvedUrl('Victory.qml'));
-                    }
                 }
             }
         }

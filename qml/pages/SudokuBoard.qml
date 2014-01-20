@@ -41,6 +41,10 @@ Grid {
         for(var block_no = 0; block_no < 9; block_no++) {
             blocks.itemAt(block_no).clearConflictMarks();
         }
+
+        if(isGameOver()) {
+            pageStack.replace(Qt.resolvedUrl('Victory.qml'));
+        }
     }
 
     Repeater {
