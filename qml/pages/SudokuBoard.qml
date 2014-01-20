@@ -172,10 +172,6 @@ Grid {
             for(var col = 0; col < 9; col++) {
                 var value = s.get(row, col);
 
-                if(value === null) {
-                    continue;
-                }
-
                 var data  = getBlockForCoords(row, col);
                 var block = data[0];
                 var bRow  = data[1];
