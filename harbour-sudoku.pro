@@ -5,6 +5,7 @@ SOURCES += \
 HEADERS       +=
 desktop.files += harbour-sudoku.desktop
 OTHER_FILES   += \
+    qml/cover/CoverPage.qml \
     qml/pages/SudokuBlock.qml \
     qml/pages/Victory.qml \
     qml/pages/NumberInput.qml \
