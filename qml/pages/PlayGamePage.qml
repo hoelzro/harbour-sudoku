@@ -20,6 +20,9 @@ import Sailfish.Silica 1.0
 import "."
 
 Page {
+
+    property alias resume: board.resume
+
     SilicaFlickable {
         anchors.fill: parent
 

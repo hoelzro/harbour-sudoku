@@ -28,6 +28,7 @@ Grid {
     property int cellSize
     property variant _currentSelection: null
     property int modelId: null
+    property bool resume: true
 
     function updateSelection(value) {
         if(_currentSelection) {
@@ -183,7 +184,7 @@ Grid {
     }
 
     Component.onCompleted: {
-        var rows = restore();
+        var rows = resume ? restore() : null;
 
         modelId = S.makeSudoku(rows);
         var s = S.getSudoku(modelId);

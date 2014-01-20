@@ -32,7 +32,9 @@ Page {
                 text: 'New Game'
 
                 onClicked: {
-                    pageStack.replace(Qt.resolvedUrl('PlayGamePage.qml'));
+                    pageStack.replace(Qt.resolvedUrl('PlayGamePage.qml'), {
+                        resume: false
+                    });
                 }
             }
         }
