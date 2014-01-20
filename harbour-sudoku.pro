@@ -5,9 +5,13 @@ SOURCES += \
 HEADERS       +=
 desktop.files += harbour-sudoku.desktop
 OTHER_FILES   += \
-    qml/pages/LaunchPage.qml \
+    qml/pages/SudokuBlock.qml \
+    qml/pages/Victory.qml \
+    qml/pages/NumberInput.qml \
+    qml/pages/SudokuBoard.qml \
     qml/pages/PlayGamePage.qml \
-    qml/pages/SetupNewGamePage.qml \
+    qml/pages/AboutPage.qml \
+    qml/pages/Sudoku.js \
     qml/harbour-sudoku.qml \
     rpm/harbour-sudoku.spec \
     rpm/harbour-sudoku.yaml \
