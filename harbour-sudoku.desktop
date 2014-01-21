@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Sudoku
-Icon=icon-launcher-default
+Icon=/usr/share/icons/hicolor/86x86/apps/harbour-sudoku.png
 X-Nemo-Application-Type=silica-qt5
 Comment=Sudoku game for Sailfish
 Exec=harbour-sudoku

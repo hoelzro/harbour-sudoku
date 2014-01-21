@@ -21,3 +21,4 @@ Files:
 - '%{_bindir}'
 - '%{_datadir}/%{name}/qml'
 - '%{_datadir}/applications/%{name}.desktop'
+- '%{_datadir}/icons/hicolor/86x86/apps/harbour-sudoku.png'
