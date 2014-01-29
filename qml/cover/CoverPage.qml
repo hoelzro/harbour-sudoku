@@ -17,10 +17,21 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "../pages"
 
 CoverBackground {
-    Label {
-        anchors.centerIn: parent
-        text: 'Sudoku'
+    Column {
+        anchors.horizontalCenter: parent.horizontalCenter
+        spacing: 10
+
+        Label {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "Sudoku"
+        }
+
+        SudokuBoard {
+            anchors.horizontalCenter: parent.horizontalCenter
+            cellSize: 20
+        }
     }
 }
