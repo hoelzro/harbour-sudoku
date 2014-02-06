@@ -30,8 +30,19 @@ CoverBackground {
         }
 
         SudokuBoard {
+            id: coverBoard
             anchors.horizontalCenter: parent.horizontalCenter
             cellSize: 20
+            autoSetup: false
+        }
+
+        Timer {
+            interval: 250
+            running: true
+
+            onTriggered: {
+                coverBoard.setup();
+            }
         }
     }
 }
