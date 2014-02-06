@@ -29,6 +29,7 @@ Grid {
     property variant _currentSelection: null
     property int modelId: null
     property bool resume: true
+    property bool autoSetup: true
 
     function updateSelection(value) {
         if(_currentSelection) {
@@ -187,7 +188,7 @@ Grid {
         }
     }
 
-    Component.onCompleted: {
+    function setup() {
         var rows = resume ? restore() : null;
 
         modelId = S.makeSudoku(rows);
@@ -208,6 +209,12 @@ Grid {
 
                 block.set(bRow, bCol, value);
             }
+        }
+    }
+
+    Component.onCompleted: {
+        if(autoSetup) {
+            setup();
         }
     }
 }
