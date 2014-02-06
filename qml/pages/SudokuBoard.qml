@@ -27,7 +27,7 @@ Grid {
 
     property int cellSize
     property variant _currentSelection: null
-    property int modelId: null
+    property int modelId: -1
     property bool resume: true
     property bool autoSetup: true
 
