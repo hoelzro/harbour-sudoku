@@ -215,7 +215,8 @@ var Sudoku = (function() {
     }
 
     var Sudoku = function Sudoku() {
-        this.cells = [];
+        this.cells        = [];
+        this.initialCells = {};
 
         for(var rowNum = 0; rowNum < GRID_SIZE; rowNum++) {
             var row = [];
@@ -433,6 +434,14 @@ var Sudoku = (function() {
         }
 
         digOut(this, DIFFICULTIES[difficulty]);
+
+        for(var row = 0; row < GRID_SIZE; row++) {
+            for(var col = 0; col < GRID_SIZE; col++) {
+                if(this.get(row, col) != null) {
+                    this.initialCells[row * GRID_SIZE + col] = true;
+                }
+            }
+        }
     };
 
     Sudoku.prototype.getConflicts = function getConflicts() {
@@ -517,6 +526,10 @@ var Sudoku = (function() {
         var choices = minPair.value;
 
         return choices.length == 1 ? { row: minCell.getRow(), col: minCell.getColumn(), value: choices[0] } : null;
+    };
+
+    Sudoku.prototype.isInitialCell = function isInitialCell(row, col) {
+        return this.initialCells[row * GRID_SIZE + col];
     };
 
     return Sudoku;
