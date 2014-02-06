@@ -33,12 +33,12 @@ Grid {
 
     function updateSelection(value) {
         if(_currentSelection) {
-            _currentSelection.value = value;
-
             var s = S.getSudoku(modelId);
             if(s.isInitialCell(_currentSelection.row, _currentSelection.column)) {
                 return;
             }
+            _currentSelection.value = value;
+
             s.set(_currentSelection.row, _currentSelection.column, value);
         }
 
