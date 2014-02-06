@@ -36,6 +36,9 @@ Grid {
             _currentSelection.value = value;
 
             var s = S.getSudoku(modelId);
+            if(s.isInitialCell(_currentSelection.row, _currentSelection.column)) {
+                return;
+            }
             s.set(_currentSelection.row, _currentSelection.column, value);
         }
 
