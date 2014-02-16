@@ -559,3 +559,10 @@ function makeSudoku(rows) {
 function getSudoku(id) {
     return sudokuObject;
 }
+
+if(typeof(module) != 'undefined') { // node.js (for testing)
+    module.exports = {
+        makeSudoku : makeSudoku,
+        getSudoku  : getSudoku
+    };
+}

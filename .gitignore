@@ -2,6 +2,7 @@
 /RPMS/
 /documentation.list
 /harbour-sudoku
+/node_modules
 
 *.o
 *.spec
