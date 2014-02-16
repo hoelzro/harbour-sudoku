@@ -123,8 +123,24 @@ Grid {
         updateSelection(hint.value);
     }
 
+    function openConnection() {
+        var db = LocalStorage.openDatabaseSync('harbour-sudoku', '', 'Saved Game Data for Sudoku', 2000);
+
+        if(db.version == '') {
+            db.changeVersion('', '2.0', function(txn) {
+                txn.executeSql('CREATE TABLE board (row INTEGER NOT NULL, column INTEGER NOT NULL, value INTEGER NOT NULL, is_initial INTEGER NOT NULL DEFAULT 0)');
+            });
+        } else if(db.version != '2.0') {
+            db.changeVersion('1.0', '2.0', function(txn) {
+                txn.executeSql('ALTER TABLE board ADD COLUMN is_initial INTEGER NOT NULL DEFAULT 0');
+            });
+        }
+
+        return db;
+    }
+
     function restore() {
-        var db = LocalStorage.openDatabaseSync('harbour-sudoku', '1.0', 'Saved Game Data for Sudoku', 2000);
+        var db = openConnection();
 
         var rows = [];
 
@@ -153,11 +169,10 @@ Grid {
     }
 
     function save() {
-        var db = LocalStorage.openDatabaseSync('harbour-sudoku', '1.0', 'Saved Game Data for Sudoku', 2000);
+        var db = openConnection();
         var s  = S.getSudoku(modelId);
 
         db.transaction(function(txn) {
-            txn.executeSql('CREATE TABLE IF NOT EXISTS board (row INTEGER NOT NULL, column INTEGER NOT NULL, value INTEGER NOT NULL)');
             txn.executeSql('DELETE FROM board');
 
             for(var row = 0; row < 9; row++) {
