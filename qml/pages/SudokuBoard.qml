@@ -145,15 +145,16 @@ Grid {
         var rows = [];
 
         try {
-            db.transaction(function(txn) {
-                var result = txn.executeSql('SELECT row, column, value FROM board');
+            db.readTransaction(function(txn) {
+                var result = txn.executeSql('SELECT row, column, value, is_initial FROM board');
 
                 for(var i = 0; i < result.rows.length; i++) {
                     var row = result.rows.item(i);
                     rows.push({
                         row: row.row,
                         column: row.column,
-                        value: row.value
+                        value: row.value,
+                        isInitial: row.is_initial
                     });
                 }
             });
@@ -177,10 +178,11 @@ Grid {
 
             for(var row = 0; row < 9; row++) {
                 for(var col = 0; col < 9; col++) {
-                    var value = s.get(row, col);
+                    var value     = s.get(row, col);
+                    var isInitial = s.isInitialCell(row, col);
 
                     if(value != null) {
-                        txn.executeSql('INSERT INTO board VALUES (?, ?, ?)', [ row, col, value ]);
+                        txn.executeSql('INSERT INTO board VALUES (?, ?, ?, ?)', [ row, col, value, isInitial ? 1 : 0 ]);
                     }
                 }
             }

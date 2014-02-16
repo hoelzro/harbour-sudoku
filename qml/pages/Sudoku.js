@@ -543,6 +543,10 @@ function makeSudoku(rows) {
     if(rows) {
         for(var i = 0; i < rows.length; i++) {
             s.set(rows[i].row, rows[i].column, rows[i].value);
+            if(rows[i].isInitial) {
+                // Hard-coded GRID_SIZE =(
+                s.initialCells[rows[i].row * 9 + rows[i].column] = true;
+            }
         }
     } else {
         s.generate(0);
