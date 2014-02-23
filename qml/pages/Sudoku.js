@@ -569,6 +569,7 @@ function getSudoku(id) {
 if(typeof(module) != 'undefined') { // node.js (for testing)
     module.exports = {
         makeSudoku : makeSudoku,
-        getSudoku  : getSudoku
+        getSudoku  : getSudoku,
+        Sudoku     : Sudoku
     };
 }
