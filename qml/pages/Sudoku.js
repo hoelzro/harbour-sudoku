@@ -100,12 +100,12 @@ var Sudoku = (function() {
         return values;
     };
 
-    ArrayUtils.shuffle = function shuffle(array) {
+    ArrayUtils.shuffle = function shuffle(array, randInt) {
         var result = [];
         var struck = [];
 
         for(var i = 0; i < array.length; i++) {
-            var k = Math.floor(Math.random() * (array.length - i));
+            var k = randInt(0, array.length - i - 1);
 
             for(var j = 0; j < array.length; j++) {
                 if(struck[j]) {
@@ -134,8 +134,8 @@ var Sudoku = (function() {
         return values;
     }
 
-    ArrayUtils.pick = function pick(array, numElements) {
-        var indices = ArrayUtils.shuffle(ArrayUtils.range(0, array.length - 1));
+    ArrayUtils.pick = function pick(array, numElements, randInt) {
+        var indices = ArrayUtils.shuffle(ArrayUtils.range(0, array.length - 1), randInt);
         var result  = ArrayUtils.pluck(array, indices.slice(0, numElements));
         return numElements == 1 ? result[0] : result;
     };
@@ -343,9 +343,9 @@ var Sudoku = (function() {
         ArrayUtils.range(30, 40),
     ];
 
-    var digOut = function digOut(s, difficulty) {
-        var numCells = (GRID_SIZE * GRID_SIZE) - ArrayUtils.pick(difficulty, 1);
-        var cells    = ArrayUtils.pick(ArrayUtils.flatten(s.cells), numCells);
+    var digOut = function digOut(s, difficulty, randInt) {
+        var numCells = (GRID_SIZE * GRID_SIZE) - ArrayUtils.pick(difficulty, 1, randInt);
+        var cells    = ArrayUtils.pick(ArrayUtils.flatten(s.cells), numCells, randInt);
 
         for(var i = 0; i < cells.length; i++) {
             cells[i].setValue(null);
@@ -392,10 +392,16 @@ var Sudoku = (function() {
         return solveHelper(this, cellLookup, relatedCells, possibleValues);
     };
 
-    Sudoku.prototype.generate = function generate(difficulty) {
+    Sudoku.prototype.generate = function generate(difficulty, randInt) {
         var cells        = ArrayUtils.flatten(this.cells);
         var relatedCells = findRelatedCells(cells);
         var hasPuzzle    = false;
+
+        if(!randInt) {
+            randInt = function randInt(min, max) {
+                return Math.round(min + (max - min) * Math.random());
+            };
+        }
 
         OUTER:
         while(true) {
@@ -405,7 +411,7 @@ var Sudoku = (function() {
                 cellToNumbers[ cells[i] ] = ArrayUtils.range(1, GRID_SIZE);
             }
 
-            var luckyFew = ArrayUtils.pick(cells, STARTING_CELLS);
+            var luckyFew = ArrayUtils.pick(cells, STARTING_CELLS, randInt);
 
             for(var i = 0; i < luckyFew.length; i++) {
                 var victim  = luckyFew[i];
@@ -416,7 +422,7 @@ var Sudoku = (function() {
                 if(!numbers || numbers.length == 0) {
                     continue OUTER;
                 }
-                var value = ArrayUtils.pick(numbers, 1);
+                var value = ArrayUtils.pick(numbers, 1, randInt);
                 victim.setValue(value);
 
                 relatedCells[victim].forEach(function(relatedCell) {
@@ -433,7 +439,7 @@ var Sudoku = (function() {
             }
         }
 
-        digOut(this, DIFFICULTIES[difficulty]);
+        digOut(this, DIFFICULTIES[difficulty], randInt);
 
         for(var row = 0; row < GRID_SIZE; row++) {
             for(var col = 0; col < GRID_SIZE; col++) {
