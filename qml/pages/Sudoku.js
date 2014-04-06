@@ -17,7 +17,7 @@
 
 // based on algorithm described in http://zhangroup.aporc.org/images/files/Paper_3485.pdf
 
-var Sudoku = (function() {
+var exports = (function() {
     const GRID_SIZE      = 9;
     const BLOCK_SIZE     = 3;
     const STARTING_CELLS = 11; // determined from paper, hardcoded for 9x9
@@ -214,6 +214,93 @@ var Sudoku = (function() {
         return '(' + this.row + ', ' + this.column + ')';
     }
 
+    var solveHelper = function solveHelper(s, cellLookup, relatedCells, possibleValues) {
+        if(HashUtils.size(possibleValues) == 0) {
+            return true;
+        }
+
+        var minPair = ArrayUtils.min(HashUtils.pairs(possibleValues), function(pair) { return pair.value.length });
+        var minCell = cellLookup[ minPair.key ];
+        var choices = minPair.value;
+
+        for(var i = 0; i < choices.length; i++) {
+            var choice = choices[i];
+
+            minCell.setValue(choice);
+
+            var newPossibleValues = {};
+
+            for(var cell in possibleValues) {
+                if(!possibleValues.hasOwnProperty(cell)) {
+                    continue;
+                }
+
+                if(relatedCells[minCell][cell]) {
+                    newPossibleValues[cell] = ArrayUtils.grep(possibleValues[cell], function(value) {
+                        return value != choice;
+                    });
+                } else {
+                    newPossibleValues[cell] = possibleValues[cell];
+                }
+            }
+
+            delete newPossibleValues[minCell];
+            if(solveHelper(s, cellLookup, relatedCells, newPossibleValues)) {
+                return true;
+            }
+        }
+        minCell.setValue(null);
+
+        return false;
+    };
+
+    var DIFFICULTIES = [
+        ArrayUtils.range(30, 40),
+    ];
+
+    var SudokuSolver = function SudokuSolver() {
+    };
+
+    SudokuSolver.prototype.solve = function solve(s) {
+        var cells          = ArrayUtils.flatten(s.cells);
+        var possibleValues = {};
+
+        var classified = ArrayUtils.classify(cells, function(value) {
+            return value.getValue() === null ? 0 : 1;
+        });
+        var emptyCells    = classified[0];
+        var nonEmptyCells = classified[1];
+
+        for(var i = 0; i < emptyCells.length; i++) {
+            var cell = emptyCells[i];
+
+            possibleValues[cell] = ArrayUtils.range(1, GRID_SIZE);
+        }
+
+        var relatedCells = findRelatedCells(cells);
+
+        for(var i = 0; i < nonEmptyCells.length; i++) {
+            var cell      = nonEmptyCells[i];
+            var related   = relatedCells[cell];
+            var cellValue = cell.getValue();
+
+            related.forEach(function(otherCell) {
+                if(otherCell in possibleValues) {
+                    possibleValues[otherCell] = ArrayUtils.grep(possibleValues[otherCell], function(value) {
+                        return value != cellValue;
+                    });
+                }
+            });
+        }
+
+        var cellLookup = {};
+        for(var i = 0; i < cells.length; i++) {
+            cellLookup[ cells[i] ] = cells[i];
+        }
+
+        return solveHelper(s, cellLookup, relatedCells, possibleValues);
+    };
+
     var Sudoku = function Sudoku() {
         this.cells        = [];
         this.initialCells = {};
@@ -299,50 +386,6 @@ var Sudoku = (function() {
         return related;
     };
 
-    var solveHelper = function solveHelper(s, cellLookup, relatedCells, possibleValues) {
-        if(HashUtils.size(possibleValues) == 0) {
-            return true;
-        }
-
-        var minPair = ArrayUtils.min(HashUtils.pairs(possibleValues), function(pair) { return pair.value.length });
-        var minCell = cellLookup[ minPair.key ];
-        var choices = minPair.value;
-
-        for(var i = 0; i < choices.length; i++) {
-            var choice = choices[i];
-
-            minCell.setValue(choice);
-
-            var newPossibleValues = {};
-
-            for(var cell in possibleValues) {
-                if(!possibleValues.hasOwnProperty(cell)) {
-                    continue;
-                }
-
-                if(relatedCells[minCell][cell]) {
-                    newPossibleValues[cell] = ArrayUtils.grep(possibleValues[cell], function(value) {
-                        return value != choice;
-                    });
-                } else {
-                    newPossibleValues[cell] = possibleValues[cell];
-                }
-            }
-
-            delete newPossibleValues[minCell];
-            if(solveHelper(s, cellLookup, relatedCells, newPossibleValues)) {
-                return true;
-            }
-        }
-        minCell.setValue(null);
-
-        return false;
-    };
-
-    var DIFFICULTIES = [
-        ArrayUtils.range(30, 40),
-    ];
-
     var digOut = function digOut(s, difficulty, randInt) {
         var numCells = (GRID_SIZE * GRID_SIZE) - ArrayUtils.pick(difficulty, 1, randInt);
         var cells    = ArrayUtils.pick(ArrayUtils.flatten(s.cells), numCells, randInt);
@@ -350,46 +393,6 @@ var Sudoku = (function() {
         for(var i = 0; i < cells.length; i++) {
             cells[i].setValue(null);
         }
-    };
-
-    Sudoku.prototype.solve = function solve() {
-        var cells          = ArrayUtils.flatten(this.cells);
-        var possibleValues = {};
-
-        var classified = ArrayUtils.classify(cells, function(value) {
-            return value.getValue() === null ? 0 : 1;
-        });
-        var emptyCells    = classified[0];
-        var nonEmptyCells = classified[1];
-
-        for(var i = 0; i < emptyCells.length; i++) {
-            var cell = emptyCells[i];
-
-            possibleValues[cell] = ArrayUtils.range(1, GRID_SIZE);
-        }
-
-        var relatedCells = findRelatedCells(cells);
-
-        for(var i = 0; i < nonEmptyCells.length; i++) {
-            var cell      = nonEmptyCells[i];
-            var related   = relatedCells[cell];
-            var cellValue = cell.getValue();
-
-            related.forEach(function(otherCell) {
-                if(otherCell in possibleValues) {
-                    possibleValues[otherCell] = ArrayUtils.grep(possibleValues[otherCell], function(value) {
-                        return value != cellValue;
-                    });
-                }
-            });
-        }
-
-        var cellLookup = {};
-        for(var i = 0; i < cells.length; i++) {
-            cellLookup[ cells[i] ] = cells[i];
-        }
-
-        return solveHelper(this, cellLookup, relatedCells, possibleValues);
     };
 
     Sudoku.prototype.generate = function generate(difficulty, randInt) {
@@ -434,7 +437,9 @@ var Sudoku = (function() {
                 });
             }
 
-            if(this.solve()) {
+            var solver = new SudokuSolver();
+
+            if(solver.solve(this)) {
                 break OUTER;
             }
         }
@@ -538,13 +543,16 @@ var Sudoku = (function() {
         return this.initialCells[row * GRID_SIZE + col];
     };
 
-    return Sudoku;
+    return {
+        Sudoku       : Sudoku,
+        SudokuSolver : SudokuSolver
+    };
 })();
 
 var sudokuObject;
 
 function makeSudoku(rows) {
-    var s = new Sudoku();
+    var s = new exports.Sudoku();
 
     if(rows) {
         for(var i = 0; i < rows.length; i++) {
@@ -567,9 +575,7 @@ function getSudoku(id) {
 }
 
 if(typeof(module) != 'undefined') { // node.js (for testing)
-    module.exports = {
-        makeSudoku : makeSudoku,
-        getSudoku  : getSudoku,
-        Sudoku     : Sudoku
-    };
+    exports.makeSudoku = makeSudoku;
+    exports.getSudoku  = getSudoku;
+    module.exports     = exports;
 }
