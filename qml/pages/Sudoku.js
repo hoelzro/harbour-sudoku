@@ -230,31 +230,34 @@ var exports = (function() {
         var minCell = cellLookup[ minPair.key ];
         var choices = minPair.value;
 
-        for(var i = 0; i < choices.length; i++) {
-            var choice = choices[i];
+        try {
+            for(var i = 0; i < choices.length; i++) {
+                var choice = choices[i];
 
-            minCell.setValue(choice);
+                minCell.setValue(choice);
 
-            var newPossibleValues = {};
+                var newPossibleValues = {};
 
-            for(var cell in possibleValues) {
-                if(!possibleValues.hasOwnProperty(cell)) {
-                    continue;
+                for(var cell in possibleValues) {
+                    if(!possibleValues.hasOwnProperty(cell)) {
+                        continue;
+                    }
+
+                    if(relatedCells[minCell][cell]) {
+                        newPossibleValues[cell] = ArrayUtils.grep(possibleValues[cell], function(value) {
+                            return value != choice;
+                        });
+                    } else {
+                        newPossibleValues[cell] = possibleValues[cell];
+                    }
                 }
 
-                if(relatedCells[minCell][cell]) {
-                    newPossibleValues[cell] = ArrayUtils.grep(possibleValues[cell], function(value) {
-                        return value != choice;
-                    });
-                } else {
-                    newPossibleValues[cell] = possibleValues[cell];
-                }
+                delete newPossibleValues[minCell];
+                solveHelper(s, action, cellLookup, relatedCells, newPossibleValues, progress);
             }
-
-            delete newPossibleValues[minCell];
-            solveHelper(s, action, cellLookup, relatedCells, newPossibleValues, progress);
+        } finally {
+            minCell.setValue(null);
         }
-        minCell.setValue(null);
     };
 
     var DIFFICULTIES = [
