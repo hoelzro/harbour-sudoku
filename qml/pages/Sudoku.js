@@ -517,6 +517,7 @@ var exports = (function() {
                     numCells++;
                     counts[ reflectionValue ]++;
                 }
+                continue;
             }
 
             flatCells = ArrayUtils.grep(flatCells, function(otherCell) {
