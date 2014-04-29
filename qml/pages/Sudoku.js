@@ -214,9 +214,10 @@ var exports = (function() {
         return '(' + this.row + ', ' + this.column + ')';
     }
 
-    var solveHelper = function solveHelper(s, cellLookup, relatedCells, possibleValues) {
+    var solveHelper = function solveHelper(s, action, cellLookup, relatedCells, possibleValues) {
         if(HashUtils.size(possibleValues) == 0) {
-            return true;
+            action(s);
+            return;
         }
 
         var minPair = ArrayUtils.min(HashUtils.pairs(possibleValues), function(pair) { return pair.value.length });
@@ -245,13 +246,9 @@ var exports = (function() {
             }
 
             delete newPossibleValues[minCell];
-            if(solveHelper(s, cellLookup, relatedCells, newPossibleValues)) {
-                return true;
-            }
+            solveHelper(s, action, cellLookup, relatedCells, newPossibleValues);
         }
         minCell.setValue(null);
-
-        return false;
     };
 
     var DIFFICULTIES = [
@@ -262,6 +259,52 @@ var exports = (function() {
     };
 
     SudokuSolver.prototype.solve = function solve(s) {
+        var sentinel;
+        var solution;
+
+        try {
+            this.eachSolution(s, function(sol) {
+                var solCells = sol.cells;
+                solution     = [];
+
+                for(var rowNo = 0; rowNo < solCells.length; rowNo++) {
+                    var row         = solCells[rowNo];
+                    var solutionRow = [];
+
+                    for(var colNo = 0; colNo < row.length; colNo++) {
+                        var cell     = row[colNo];
+                        var cellCopy = new Cell(cell.getRow(), cell.getColumn());
+                        cellCopy.setValue(cell.getValue());
+
+                        solutionRow.push(cellCopy);
+                    }
+
+                    solution.push(solutionRow);
+                }
+                throw sentinel;
+            });
+        } catch(e) {
+            if(e !== sentinel) {
+                throw e;
+            }
+        }
+
+        if(solution) {
+            for(var rowNo = 0; rowNo < solution.length; rowNo++) {
+                var row = solution[rowNo];
+                for(var colNo = 0; colNo < row.length; colNo++) {
+                    var cell = row[colNo];
+
+                    s.set(cell.getRow(), cell.getColumn(), cell.getValue());
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    SudokuSolver.prototype.eachSolution = function eachSolution(s, action) {
         var cells          = ArrayUtils.flatten(s.cells);
         var possibleValues = {};
 
@@ -298,7 +341,7 @@ var exports = (function() {
             cellLookup[ cells[i] ] = cells[i];
         }
 
-        return solveHelper(s, cellLookup, relatedCells, possibleValues);
+        return solveHelper(s, action, cellLookup, relatedCells, possibleValues);
     };
 
     var Sudoku = function Sudoku() {
