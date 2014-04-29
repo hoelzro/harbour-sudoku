@@ -14,7 +14,17 @@ test('Assert that only single-solution sudokus are generated', function(t) {
         var sentinel = {};
 
         try {
-            solver.eachSolution(s, function(_) {
+            solver.eachSolution(s, function(solution) {
+                var initialCells = solution.initialCells;
+                var numGiven     = 0;
+
+                for(var k in initialCells) {
+                    if(! initialCells.hasOwnProperty(k)) {
+                        continue;
+                    }
+                    numGiven++;
+                }
+                t.ok(numGiven >= 27 && numGiven <= 30, '# given cells should be between 27 and 30');
                 numSolutions++;
                 if(numSolutions > 1) {
                     throw sentinel;
