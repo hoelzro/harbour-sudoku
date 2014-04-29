@@ -485,7 +485,11 @@ var exports = (function() {
 
         while(numCells > 0) {
             var cell       = ArrayUtils.pick(flatCells, 1, randInt);
-            var reflection = reflectCell(cell, flatCells);
+            if(numCells >= 10) { // XXX poor metric, and unclean code
+                var reflection = reflectCell(cell, flatCells);
+            } else {
+                var reflection = cell;
+            }
 
             var cellValue       = cell.getValue();
             var reflectionValue = reflection.getValue();
