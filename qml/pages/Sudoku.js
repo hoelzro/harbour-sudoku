@@ -429,12 +429,93 @@ var exports = (function() {
         return related;
     };
 
-    var digOut = function digOut(s, difficulty, randInt) {
-        var numCells = (GRID_SIZE * GRID_SIZE) - ArrayUtils.pick(difficulty, 1, randInt);
-        var cells    = ArrayUtils.pick(ArrayUtils.flatten(s.cells), numCells, randInt);
+    var reflectCell = function reflectCell(cell, allCells) {
+        var row = cell.getRow();
+        var col = cell.getColumn();
 
-        for(var i = 0; i < cells.length; i++) {
-            cells[i].setValue(null);
+        var center = (GRID_SIZE - 1) / 2;
+
+        var dRow = row - center;
+        var dCol = col - center;
+
+        var mirrorRow = center - dRow;
+        var mirrorCol = center - dCol;
+
+        return ArrayUtils.grep(allCells, function(otherCell) {
+            return otherCell.getRow() == mirrorRow && otherCell.getColumn() == mirrorCol;
+        })[0];
+    };
+
+    var hasUniqueSolution = function hasUniqueSolution(s) {
+        var solver = new SudokuSolver();
+
+        var sentinel        = {};
+        var hasSeenSolution = false;
+
+        try {
+            solver.eachSolution(s, function(_) {
+                if(hasSeenSolution) {
+                    throw sentinel;
+                }
+                hasSeenSolution = true;
+            });
+        } catch(e) {
+            if(e !== sentinel) {
+                throw e;
+            }
+            return false;
+        }
+
+        return hasSeenSolution;
+    };
+
+    var digOut = function digOut(s, difficulty, randInt) {
+        var numCells  = (GRID_SIZE * GRID_SIZE) - ArrayUtils.pick(difficulty, 1, randInt);
+        var flatCells = ArrayUtils.flatten(s.cells);
+        var counts    = [ null, 9 ,9, 9, 9, 9, 9, 9, 9, 9 ]; // XXX hardcoded
+
+        while(numCells > 0) {
+            var cell       = ArrayUtils.pick(flatCells, 1, randInt);
+            var reflection = reflectCell(cell, flatCells);
+
+            var cellValue       = cell.getValue();
+            var reflectionValue = reflection.getValue();
+
+            counts[ cellValue ]--;
+            if(reflection !== cell) {
+                counts[ reflectionValue ]--;
+            }
+
+            // XXX this guarantees all 9 numbers are on the board...we just need 8
+            if(counts[cellValue] == 0 || counts[reflectionValue] == 0) {
+                counts[ cellValue ]++;
+                if(reflection !== cell) {
+                    counts[ reflectionValue ]++;
+                }
+                continue;
+            }
+
+            cell.setValue(null);
+            numCells--;
+
+            if(reflection !== cell) { // the center is its own reflection
+                reflection.setValue(null);
+                numCells--;
+            }
+
+            if(! hasUniqueSolution(s)) {
+                numCells++;
+                counts[ cellValue ]++;
+
+                if(reflection !== null) {
+                    numCells++;
+                    counts[ reflectionValue ]++;
+                }
+            }
+
+            flatCells = ArrayUtils.grep(flatCells, function(otherCell) {
+                return otherCell !== cell && otherCell !== reflection;
+            });
         }
     };
 
