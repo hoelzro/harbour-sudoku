@@ -18,9 +18,11 @@
 // based on algorithm described in http://zhangroup.aporc.org/images/files/Paper_3485.pdf
 
 var exports = (function() {
-    const GRID_SIZE      = 9;
-    const BLOCK_SIZE     = 3;
-    const STARTING_CELLS = 11; // determined from paper, hardcoded for 9x9
+    const GRID_SIZE       = 9;
+    const BLOCK_SIZE      = 3;
+    const STARTING_CELLS  = 11;   // determined from paper, hardcoded for 9x9
+    const MAX_SOLVE_CALLS = 1000; // to avoid wasting time trying to find solutions for hard-to-solve puzzles;
+                                  // just restart
 
     var ArrayUtils = {};
 
@@ -214,7 +216,11 @@ var exports = (function() {
         return '(' + this.row + ', ' + this.column + ')';
     }
 
-    var solveHelper = function solveHelper(s, action, cellLookup, relatedCells, possibleValues) {
+    var solveHelper = function solveHelper(s, action, cellLookup, relatedCells, possibleValues, progress) {
+        progress.numCalls++;
+        if(progress.numCalls > MAX_SOLVE_CALLS) {
+            return;
+        }
         if(HashUtils.size(possibleValues) == 0) {
             action(s);
             return;
@@ -246,7 +252,7 @@ var exports = (function() {
             }
 
             delete newPossibleValues[minCell];
-            solveHelper(s, action, cellLookup, relatedCells, newPossibleValues);
+            solveHelper(s, action, cellLookup, relatedCells, newPossibleValues, progress);
         }
         minCell.setValue(null);
     };
@@ -341,7 +347,7 @@ var exports = (function() {
             cellLookup[ cells[i] ] = cells[i];
         }
 
-        return solveHelper(s, action, cellLookup, relatedCells, possibleValues);
+        return solveHelper(s, action, cellLookup, relatedCells, possibleValues, { numCalls: 0 });
     };
 
     var Sudoku = function Sudoku() {
