@@ -252,7 +252,7 @@ var exports = (function() {
     };
 
     var DIFFICULTIES = [
-        ArrayUtils.range(30, 40),
+        ArrayUtils.range(27, 30),
     ];
 
     var SudokuSolver = function SudokuSolver() {
