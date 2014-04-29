@@ -31,6 +31,12 @@ Grid {
     property bool resume: true
     property bool autoSetup: true
 
+    function clearConflicts() {
+        for(var block_no = 0; block_no < 9; block_no++) {
+            blocks.itemAt(block_no).clearConflictMarks();
+        }
+    }
+
     function updateSelection(value) {
         if(_currentSelection) {
             var s = S.getSudoku(modelId);
@@ -42,9 +48,7 @@ Grid {
             s.set(_currentSelection.row, _currentSelection.column, value);
         }
 
-        for(var block_no = 0; block_no < 9; block_no++) {
-            blocks.itemAt(block_no).clearConflictMarks();
-        }
+        clearConflicts();
 
         if(isGameOver()) {
             pageStack.replace(Qt.resolvedUrl('Victory.qml'));
@@ -206,6 +210,8 @@ Grid {
                 block.set(bRow, bCol, value);
             }
         }
+
+        clearConflicts();
     }
 
     function setup() {
