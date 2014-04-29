@@ -517,7 +517,7 @@ var exports = (function() {
                 numCells++;
                 counts[ cellValue ]++;
 
-                if(reflection !== null) {
+                if(reflection !== cell) {
                     reflection.setValue(reflectionValue);
                     numCells++;
                     counts[ reflectionValue ]++;
