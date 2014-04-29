@@ -513,10 +513,12 @@ var exports = (function() {
             }
 
             if(! hasUniqueSolution(s)) {
+                cell.setValue(cellValue);
                 numCells++;
                 counts[ cellValue ]++;
 
                 if(reflection !== null) {
+                    reflection.setValue(reflectionValue);
                     numCells++;
                     counts[ reflectionValue ]++;
                 }
