@@ -26,6 +26,16 @@ var exports = (function() {
 
     var ArrayUtils = {};
 
+    ArrayUtils.map = function map(array, transform) {
+        var result = [];
+
+        for(var i = 0; i < array.length; i++) {
+            result.push(transform(array[i]));
+        }
+
+        return result;
+    };
+
     ArrayUtils.grep = function grep(array, predicate) {
         var result = [];
 
