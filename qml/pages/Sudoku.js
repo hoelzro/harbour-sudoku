@@ -488,60 +488,90 @@ var exports = (function() {
         return hasSeenSolution;
     };
 
+    // This code could benefit from lack of repetition wrt. handling
+    // of the reflected cell, the hardcoding of the "last few cells" value,
+    // handling the case when we run out of cells, among other things
     var digOut = function digOut(s, difficulty, randInt) {
-        var numCells  = (GRID_SIZE * GRID_SIZE) - ArrayUtils.pick(difficulty, 1, randInt);
-        var flatCells = ArrayUtils.flatten(s.cells);
-        var counts    = [ null, 9 ,9, 9, 9, 9, 9, 9, 9, 9 ]; // XXX hardcoded
+        var flatCells     = ArrayUtils.flatten(s.cells);
+        var pristineState = ArrayUtils.map(flatCells, function(cell) {
+            return cell.getValue();
+        });
 
-        while(numCells > 0) {
-            var cell       = ArrayUtils.pick(flatCells, 1, randInt);
-            if(numCells >= 10) { // XXX poor metric, and unclean code
-                var reflection = reflectCell(cell, flatCells);
-            } else {
-                var reflection = cell;
-            }
+        while(true) {
+            var numCells  = (GRID_SIZE * GRID_SIZE) - ArrayUtils.pick(difficulty, 1, randInt);
+            var counts    = [ null, 9 ,9, 9, 9, 9, 9, 9, 9, 9 ]; // XXX hardcoded
+            var available = flatCells;
 
-            var cellValue       = cell.getValue();
-            var reflectionValue = reflection.getValue();
+            while(numCells > 0 && available.length > 0) {
+                var cell = ArrayUtils.pick(available, 1, randInt);
 
-            counts[ cellValue ]--;
-            if(reflection !== cell) {
-                counts[ reflectionValue ]--;
-            }
-
-            // XXX this guarantees all 9 numbers are on the board...we just need 8
-            if(counts[cellValue] == 0 || counts[reflectionValue] == 0) {
-                counts[ cellValue ]++;
-                if(reflection !== cell) {
-                    counts[ reflectionValue ]++;
+                if(numCells >= 10) { // XXX poor metric, and unclean code
+                    var reflection = reflectCell(cell, flatCells);
+                } else {
+                    var reflection = cell;
                 }
-                continue;
-            }
 
-            cell.setValue(null);
-            numCells--;
+                var cellValue       = cell.getValue();
+                var reflectionValue = reflection.getValue();
 
-            if(reflection !== cell) { // the center is its own reflection
-                reflection.setValue(null);
+                counts[ cellValue ]--;
+                if(reflection !== cell) {
+                    counts[ reflectionValue ]--;
+                }
+
+                // XXX this guarantees all 9 numbers are on the board...we just need 8
+                if(counts[cellValue] == 0 || counts[reflectionValue] == 0) {
+                    counts[ cellValue ]++;
+
+                    available = ArrayUtils.grep(available, function(otherCell) {
+                        return otherCell != cell && otherCell != reflection;
+                    });
+                    if(reflection !== cell) {
+                        counts[ reflectionValue ]++;
+                        available.push(reflection);
+                    }
+                    continue;
+                }
+
+                cell.setValue(null);
                 numCells--;
-            }
 
-            if(! hasUniqueSolution(s)) {
-                cell.setValue(cellValue);
-                numCells++;
-                counts[ cellValue ]++;
-
-                if(reflection !== cell) {
-                    reflection.setValue(reflectionValue);
-                    numCells++;
-                    counts[ reflectionValue ]++;
+                if(reflection !== cell) { // the center is its own reflection
+                    reflection.setValue(null);
+                    numCells--;
                 }
-                continue;
+
+                if(! hasUniqueSolution(s)) {
+                    cell.setValue(cellValue);
+                    numCells++;
+                    counts[ cellValue ]++;
+
+                    available = ArrayUtils.grep(available, function(otherCell) {
+                        return otherCell != cell && otherCell != reflection;
+                    });
+
+                    if(reflection !== cell) {
+                        reflection.setValue(reflectionValue);
+                        numCells++;
+                        counts[ reflectionValue ]++;
+                    }
+                    continue;
+                }
+
+                flatCells = ArrayUtils.grep(flatCells, function(otherCell) {
+                    return otherCell !== cell && otherCell !== reflection;
+                });
+                available = flatCells;
             }
 
-            flatCells = ArrayUtils.grep(flatCells, function(otherCell) {
-                return otherCell !== cell && otherCell !== reflection;
-            });
+            if(numCells > 0) { // it means we ran out of candidate cells, restart
+                flatCells = ArrayUtils.flatten(s.cells);
+                for(var i = 0; i < flatCells.length; i++) {
+                    flatCells[i].setValue(pristineState[i]);
+                }
+            } else {
+                break;
+            }
         }
     };
 
