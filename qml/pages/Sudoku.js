@@ -178,23 +178,6 @@ var exports = (function() {
         return count;
     };
 
-    var Set = function Set(elements) {
-        for(var i = 0; i < elements.length; i++) {
-            var e = elements[i];
-
-            this[e] = e;
-        }
-    };
-
-    Set.prototype.forEach = function forEach(action) {
-        for(var k in this) {
-            if(! this.hasOwnProperty(k)) {
-                continue;
-            }
-            action(this[k]);
-        }
-    };
-
     var Cell = function Cell(row, column) {
         this.row    = row;
         this.column = column;
@@ -341,13 +324,14 @@ var exports = (function() {
             var related   = relatedCells[cell];
             var cellValue = cell.getValue();
 
-            related.forEach(function(otherCell) {
+            for(var j = 0; j < related.length; j++) {
+                var otherCell = related[j];
                 if(otherCell in possibleValues) {
                     possibleValues[otherCell] = ArrayUtils.grep(possibleValues[otherCell], function(value) {
                         return value != cellValue;
                     });
                 }
-            });
+            };
         }
 
         var cellLookup = {};
@@ -437,11 +421,27 @@ var exports = (function() {
         for(var i = 0; i < cells.length; i++) {
             var cell = cells[i];
 
-            var relations = new Set(ArrayUtils.flatten([
+            var relations = ArrayUtils.flatten([
                 ArrayUtils.grep(rowToCells[ cell.getRow() ],    function(otherCell) { return cell.getBlock() != otherCell.getBlock() }),
                 ArrayUtils.grep(colToCells[ cell.getColumn() ], function(otherCell) { return cell.getBlock() != otherCell.getBlock() }),
                 ArrayUtils.grep(blockToCells[ cell.getBlock() ], function(otherCell) { return cell != otherCell })
-            ]));
+            ]);
+
+            var uniqRelations = {};
+
+            for(var j = 0; j < relations.length; j++) {
+                uniqRelations[relations[j]] = relations[j];
+            }
+
+            relations = [];
+
+            for(var k in uniqRelations) {
+                if(! uniqRelations.hasOwnProperty(k)) {
+                    continue;
+                }
+                relations[uniqRelations[k]] = true;
+                relations.push(uniqRelations[k]);
+            }
 
             related[cell] = relations;
         }
@@ -605,13 +605,16 @@ var exports = (function() {
                 var value = ArrayUtils.pick(numbers, 1, randInt);
                 victim.setValue(value);
 
-                relatedCells[victim].forEach(function(relatedCell) {
+                var relations = relatedCells[victim];
+
+                for(var j = 0; j < relations.length; j++) {
+                    var relatedCell = relations[j];
                     if(cellToNumbers[relatedCell]) {
                         cellToNumbers[ relatedCell ] = ArrayUtils.grep(cellToNumbers[ relatedCell ], function(otherValue) {
                             return value != otherValue;
                         });
                     }
-                });
+                };
             }
 
             var solver = new SudokuSolver();
@@ -644,13 +647,16 @@ var exports = (function() {
             var value = nonEmptyCells[i].getValue();
             var isConflicting = false;
 
-            relatedCellLookup[ nonEmptyCells[i] ].forEach(function(cell) {
-                var otherValue = cell.getValue();
+            var relations = relatedCellLookup[ nonEmptyCells[i] ];
+
+            for(var j = 0; j < relations.length; j++) {
+                var otherValue = relations[j].getValue();
 
                 if(otherValue === value) {
                     isConflicting = true;
+                    break;
                 }
-            });
+            };
 
             if(isConflicting) {
                 conflicts.push({
@@ -695,13 +701,14 @@ var exports = (function() {
             var related   = relatedCells[cell];
             var cellValue = cell.getValue();
 
-            related.forEach(function(otherCell) {
+            for(var j = 0; j < related.length; j++) {
+                var otherCell = related[j];
                 if(otherCell in possibleValues) {
                     possibleValues[otherCell] = ArrayUtils.grep(possibleValues[otherCell], function(value) {
                         return value != cellValue;
                     });
                 }
-            });
+            };
         }
 
         var cellLookup = {};
