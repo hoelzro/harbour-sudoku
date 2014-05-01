@@ -339,7 +339,7 @@ var exports = (function() {
             possibleValues[cell] = ArrayUtils.range(1, GRID_SIZE);
         }
 
-        var relatedCells = findRelatedCells(cells);
+        var relatedCells = findRelatedCells(s);
 
         for(var i = 0; i < nonEmptyCells.length; i++) {
             var cell      = nonEmptyCells[i];
@@ -426,7 +426,13 @@ var exports = (function() {
         return this.cells[row][col].getValue();
     };
 
-    var findRelatedCells = function findRelatedCells(cells) {
+    var findRelatedCells = function findRelatedCells(s) {
+        if('_related_cells' in s) {
+            return s._related_cells;
+        }
+
+        var cells = ArrayUtils.flatten(s.cells);
+
         var rowToCells   = ArrayUtils.classify(cells, function(cell) { return cell.getRow() });
         var colToCells   = ArrayUtils.classify(cells, function(cell) { return cell.getColumn() });
         var blockToCells = ArrayUtils.classify(cells, function(cell) { return cell.getBlock() });
@@ -444,6 +450,8 @@ var exports = (function() {
 
             related[cell] = relations;
         }
+
+        s._related_cells = related;
 
         return related;
     };
@@ -577,7 +585,7 @@ var exports = (function() {
 
     Sudoku.prototype.generate = function generate(difficulty, randInt) {
         var cells        = ArrayUtils.flatten(this.cells);
-        var relatedCells = findRelatedCells(cells);
+        var relatedCells = findRelatedCells(this);
         var hasPuzzle    = false;
 
         if(!randInt) {
@@ -636,7 +644,7 @@ var exports = (function() {
     };
 
     Sudoku.prototype.getConflicts = function getConflicts() {
-        var relatedCellLookup = findRelatedCells(ArrayUtils.flatten(this.cells));
+        var relatedCellLookup = findRelatedCells(this);
         var nonEmptyCells     = ArrayUtils.grep(ArrayUtils.flatten(this.cells), function(cell) {
             return cell.getValue() != null;
         });
@@ -691,7 +699,7 @@ var exports = (function() {
             possibleValues[cell] = ArrayUtils.range(1, GRID_SIZE);
         }
 
-        var relatedCells = findRelatedCells(cells);
+        var relatedCells = findRelatedCells(this);
 
         for(var i = 0; i < nonEmptyCells.length; i++) {
             var cell      = nonEmptyCells[i];
