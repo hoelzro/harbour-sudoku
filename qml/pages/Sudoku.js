@@ -227,47 +227,49 @@ var exports = (function() {
     }
 
     var solveHelper = function solveHelper(s, action, cellLookup, relatedCells, possibleValues, progress) {
+        var abortEarly;
+
         progress.numCalls++;
         if(progress.numCalls > MAX_SOLVE_CALLS) {
-            return;
+            return true;
         }
         if(HashUtils.size(possibleValues) == 0) {
-            action(s);
-            return;
+            return action(s);
         }
 
         var minPair = ArrayUtils.min(HashUtils.pairs(possibleValues), function(pair) { return pair.value.length });
         var minCell = cellLookup[ minPair.key ];
         var choices = minPair.value;
 
-        try {
-            for(var i = 0; i < choices.length; i++) {
-                var choice = choices[i];
+        for(var i = 0; i < choices.length; i++) {
+            var choice = choices[i];
 
-                minCell.setValue(choice);
+            minCell.setValue(choice);
 
-                var newPossibleValues = {};
+            var newPossibleValues = {};
 
-                for(var cell in possibleValues) {
-                    if(!possibleValues.hasOwnProperty(cell)) {
-                        continue;
-                    }
-
-                    if(relatedCells[minCell][cell]) {
-                        newPossibleValues[cell] = ArrayUtils.grep(possibleValues[cell], function(value) {
-                            return value != choice;
-                        });
-                    } else {
-                        newPossibleValues[cell] = possibleValues[cell];
-                    }
+            for(var cell in possibleValues) {
+                if(!possibleValues.hasOwnProperty(cell)) {
+                    continue;
                 }
 
-                delete newPossibleValues[minCell];
-                solveHelper(s, action, cellLookup, relatedCells, newPossibleValues, progress);
+                if(relatedCells[minCell][cell]) {
+                    newPossibleValues[cell] = ArrayUtils.grep(possibleValues[cell], function(value) {
+                        return value != choice;
+                    });
+                } else {
+                    newPossibleValues[cell] = possibleValues[cell];
+                }
             }
-        } finally {
-            minCell.setValue(null);
+
+            delete newPossibleValues[minCell];
+            abortEarly = solveHelper(s, action, cellLookup, relatedCells, newPossibleValues, progress);
+            if(abortEarly) {
+                break;
+            }
         }
+        minCell.setValue(null);
+        return abortEarly;
     };
 
     var DIFFICULTIES = [
@@ -278,35 +280,28 @@ var exports = (function() {
     };
 
     SudokuSolver.prototype.solve = function solve(s) {
-        var sentinel;
         var solution;
 
-        try {
-            this.eachSolution(s, function(sol) {
-                var solCells = sol.cells;
-                solution     = [];
+        this.eachSolution(s, function(sol) {
+            var solCells = sol.cells;
+            solution     = [];
 
-                for(var rowNo = 0; rowNo < solCells.length; rowNo++) {
-                    var row         = solCells[rowNo];
-                    var solutionRow = [];
+            for(var rowNo = 0; rowNo < solCells.length; rowNo++) {
+                var row         = solCells[rowNo];
+                var solutionRow = [];
 
-                    for(var colNo = 0; colNo < row.length; colNo++) {
-                        var cell     = row[colNo];
-                        var cellCopy = new Cell(cell.getRow(), cell.getColumn());
-                        cellCopy.setValue(cell.getValue());
+                for(var colNo = 0; colNo < row.length; colNo++) {
+                    var cell     = row[colNo];
+                    var cellCopy = new Cell(cell.getRow(), cell.getColumn());
+                    cellCopy.setValue(cell.getValue());
 
-                        solutionRow.push(cellCopy);
-                    }
-
-                    solution.push(solutionRow);
+                    solutionRow.push(cellCopy);
                 }
-                throw sentinel;
-            });
-        } catch(e) {
-            if(e !== sentinel) {
-                throw e;
+
+                solution.push(solutionRow);
             }
-        }
+            return true;
+        });
 
         if(solution) {
             for(var rowNo = 0; rowNo < solution.length; rowNo++) {
@@ -360,7 +355,7 @@ var exports = (function() {
             cellLookup[ cells[i] ] = cells[i];
         }
 
-        return solveHelper(s, action, cellLookup, relatedCells, possibleValues, { numCalls: 0 });
+        solveHelper(s, action, cellLookup, relatedCells, possibleValues, { numCalls: 0 });
     };
 
     var Sudoku = function Sudoku() {
@@ -476,24 +471,18 @@ var exports = (function() {
     var hasUniqueSolution = function hasUniqueSolution(s) {
         var solver = new SudokuSolver();
 
-        var sentinel        = {};
         var hasSeenSolution = false;
+        var hasMoreThanOne  = false;
 
-        try {
-            solver.eachSolution(s, function(_) {
-                if(hasSeenSolution) {
-                    throw sentinel;
-                }
-                hasSeenSolution = true;
-            });
-        } catch(e) {
-            if(e !== sentinel) {
-                throw e;
+        solver.eachSolution(s, function(_) {
+            if(hasSeenSolution) {
+                hasMoreThanOne = true;
+                return true;
             }
-            return false;
-        }
+            hasSeenSolution = true;
+        });
 
-        return hasSeenSolution;
+        return !hasMoreThanOne && hasSeenSolution;
     };
 
     // This code could benefit from lack of repetition wrt. handling
