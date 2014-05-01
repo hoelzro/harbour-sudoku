@@ -724,7 +724,7 @@ var exports = (function() {
     };
 
     Sudoku.prototype.isInitialCell = function isInitialCell(row, col) {
-        return this.initialCells[row * GRID_SIZE + col];
+        return this.initialCells[row * GRID_SIZE + col] || false;
     };
 
     return {
