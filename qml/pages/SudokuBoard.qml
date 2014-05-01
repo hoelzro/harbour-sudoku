@@ -207,7 +207,7 @@ Grid {
                 var bRow  = data[1];
                 var bCol  = data[2];
 
-                block.set(bRow, bCol, value);
+                block.set(bRow, bCol, value, s.isInitialCell(row, col));
             }
         }
 
@@ -233,7 +233,7 @@ Grid {
                 var bRow  = data[1];
                 var bCol  = data[2];
 
-                block.set(bRow, bCol, value);
+                block.set(bRow, bCol, value, s.isInitialCell(row, col));
             }
         }
     }

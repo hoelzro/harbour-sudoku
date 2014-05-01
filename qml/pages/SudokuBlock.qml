@@ -53,6 +53,7 @@ Rectangle {
                 property int column: (blockNumber % 3) * 3 + (index % 3)
                 property variant value: null
                 property bool isConflict: false
+                property bool isInitial: false
 
                 Text {
                     anchors.centerIn: parent
@@ -69,11 +70,13 @@ Rectangle {
         }
     }
 
-    function set(row, col, value) {
+    function set(row, col, value, isInitial) {
         var index = row * 3 + col;
+        var cell  = cells.itemAt(index);
 
         // XXX can we update the current binding?
-        cells.itemAt(index).value = Qt.binding(function() { return value; });
+        cell.value     = Qt.binding(function() { return value; });
+        cell.isInitial = isInitial;
     }
 
     function markAsConflict(row, col) {
