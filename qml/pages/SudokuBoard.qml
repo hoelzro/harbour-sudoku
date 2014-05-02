@@ -31,6 +31,8 @@ Grid {
     property bool resume: true
     property bool autoSetup: true
 
+    property variant sudokuWorker: null
+
     function clearConflicts() {
         for(var block_no = 0; block_no < 9; block_no++) {
             blocks.itemAt(block_no).clearConflictMarks();
@@ -193,10 +195,10 @@ Grid {
         });
     }
 
-    function reset() {
-        // XXX code duplication =(
-        modelId = S.makeSudoku();
-        var s = S.getSudoku(modelId);
+    function onBoardLoaded(state) {
+        var rows = state.rows;
+        modelId  = S.makeSudoku(rows);
+        var s    = S.getSudoku(modelId);
 
         for(var row = 0; row < 9; row++) {
             for(var col = 0; col < 9; col++) {
@@ -210,31 +212,30 @@ Grid {
                 block.set(bRow, bCol, value, s.isInitialCell(row, col));
             }
         }
+    }
 
+    function generateBoardInBackground() {
+        // XXX display UI spinner
+        if(! sudokuWorker) {
+            sudokuWorker = Qt.createQmlObject("import QtQuick 2.0; WorkerScript { source: 'Sudoku.js'; onMessage: onBoardLoaded(messageObject) }", board);
+        }
+        sudokuWorker.sendMessage();
+    }
+
+    function reset() {
+        generateBoardInBackground();
         clearConflicts();
     }
 
     function setup() {
-        var rows = resume ? restore() : null;
-
-        modelId = S.makeSudoku(rows);
-        var s = S.getSudoku(modelId);
-
-        for(var row = 0; row < 9; row++) {
-            for(var col = 0; col < 9; col++) {
-                var value = s.get(row, col);
-
-                if(value === null) {
-                    continue;
-                }
-
-                var data  = getBlockForCoords(row, col);
-                var block = data[0];
-                var bRow  = data[1];
-                var bCol  = data[2];
-
-                block.set(bRow, bCol, value, s.isInitialCell(row, col));
-            }
+        if(resume) {
+            var rows = restore();
+            onBoardLoaded({
+                rows: rows,
+                bg:   false
+            });
+        } else {
+            generateBoardInBackground();
         }
     }
 

@@ -764,3 +764,31 @@ if(typeof(module) != 'undefined') { // node.js (for testing)
     exports.getSudoku  = getSudoku;
     module.exports     = exports;
 }
+
+if(typeof(WorkerScript) !== 'undefined') {
+    WorkerScript.onMessage = function onMessage(message) {
+        var s = new exports.Sudoku();
+        s.generate(0);
+
+        var rows = [];
+        // XXX hard-coded GRID_SIZE =(
+        for(var row = 0; row < 9; row++) {
+            for(var col = 0; col < 9; col++) {
+                var value = s.get(row, col);
+
+                if(value !== null) {
+                    rows.push({
+                        row: row,
+                        column: col,
+                        value: value,
+                        isInitial: true
+                    });
+                }
+            }
+        }
+        WorkerScript.sendMessage({
+            rows: rows,
+            bg:   true
+        });
+    };
+}
