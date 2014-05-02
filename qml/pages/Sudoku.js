@@ -538,6 +538,7 @@ var exports = (function() {
                     numCells--;
                 }
 
+                // XXX we don't have to constantly rebuild possibleValues...
                 if(! hasUniqueSolution(s)) {
                     cell.setValue(cellValue);
                     numCells++;
