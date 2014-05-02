@@ -57,7 +57,7 @@ Rectangle {
 
                 Text {
                     anchors.centerIn: parent
-                    color: Theme.primaryColor
+                    color: isInitial ? Theme.primaryColor : Theme.highlightColor
 
                     text: value == null ? '' : '' + value
                 }
