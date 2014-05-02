@@ -17,6 +17,7 @@
 
 import QtQuick 2.0
 import QtQuick.LocalStorage 2.0
+import Sailfish.Silica 1.0
 import "."
 import "Sudoku.js" as S
 
@@ -196,6 +197,10 @@ Grid {
     }
 
     function onBoardLoaded(state) {
+        if(state.bg) {
+            pageStack.pop(); // remove the Generating page
+        }
+
         var rows = state.rows;
         modelId  = S.makeSudoku(rows);
         var s    = S.getSudoku(modelId);
@@ -215,10 +220,10 @@ Grid {
     }
 
     function generateBoardInBackground() {
-        // XXX display UI spinner
         if(! sudokuWorker) {
             sudokuWorker = Qt.createQmlObject("import QtQuick 2.0; WorkerScript { source: 'Sudoku.js'; onMessage: onBoardLoaded(messageObject) }", board);
         }
+        pageStack.push(Qt.resolvedUrl('Generating.qml'), {}, PageStackAction.Immediate);
         sudokuWorker.sendMessage();
     }
 
