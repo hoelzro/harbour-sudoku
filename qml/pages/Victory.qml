@@ -20,6 +20,8 @@ import Sailfish.Silica 1.0
 import "."
 
 Page {
+    property variant board
+
     SilicaFlickable {
         anchors.fill: parent
 
@@ -32,9 +34,7 @@ Page {
                 text: 'New Game'
 
                 onClicked: {
-                    pageStack.replace(Qt.resolvedUrl('PlayGamePage.qml'), {
-                        resume: false
-                    });
+                    board.generateBoardInBackground(true);
                 }
             }
         }

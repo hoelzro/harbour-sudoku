@@ -54,7 +54,9 @@ Grid {
         clearConflicts();
 
         if(isGameOver()) {
-            pageStack.replace(Qt.resolvedUrl('Victory.qml'));
+            pageStack.push(Qt.resolvedUrl('Victory.qml'), {
+                board: this
+            });
         }
     }
 
@@ -219,12 +221,16 @@ Grid {
         }
     }
 
-    function generateBoardInBackground() {
+    function generateBoardInBackground(replace) {
         if(! sudokuWorker) {
             sudokuWorker = Qt.createQmlObject("import QtQuick 2.0; WorkerScript { source: 'Sudoku.js'; onMessage: onBoardLoaded(messageObject) }", board);
         }
-        pageStack.push(Qt.resolvedUrl('Generating.qml'), {}, PageStackAction.Immediate);
         sudokuWorker.sendMessage();
+        if(replace) {
+            pageStack.replace(Qt.resolvedUrl('Generating.qml'), {}, PageStackAction.Immediate);
+        } else {
+            pageStack.push(Qt.resolvedUrl('Generating.qml'), {}, PageStackAction.Immediate);
+        }
     }
 
     function reset() {
