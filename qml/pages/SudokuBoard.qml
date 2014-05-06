@@ -241,13 +241,16 @@ Grid {
     function setup() {
         if(resume) {
             var rows = restore();
-            onBoardLoaded({
-                rows: rows,
-                bg:   false
-            });
-        } else {
-            generateBoardInBackground();
+            if(rows !== null) {
+                onBoardLoaded({
+                    rows: rows,
+                    bg:   false
+                });
+                return;
+            }
         }
+
+        generateBoardInBackground();
     }
 
     Component.onCompleted: {
