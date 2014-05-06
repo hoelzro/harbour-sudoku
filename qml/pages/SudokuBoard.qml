@@ -22,6 +22,7 @@ import "."
 import "Sudoku.js" as S
 
 Grid {
+    id: board
     rows: 3
     columns: 3
     spacing: 5
