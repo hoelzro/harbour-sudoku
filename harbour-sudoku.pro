@@ -11,6 +11,7 @@ OTHER_FILES   += \
     qml/pages/NumberInput.qml \
     qml/pages/SudokuBoard.qml \
     qml/pages/PlayGamePage.qml \
+    qml/pages/Generating.qml \
     qml/pages/AboutPage.qml \
     qml/pages/Sudoku.js \
     qml/harbour-sudoku.qml \

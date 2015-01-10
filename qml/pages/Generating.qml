@@ -6,6 +6,7 @@ Page {
 
     Column {
         anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
         spacing: 20
 
         Label {
