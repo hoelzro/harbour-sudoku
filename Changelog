@@ -1,0 +1,15 @@
+0.3 2015-01-09
+
+    - Vertically align text on game generation view (thanks, Michal Parusinski!)
+
+0.2 2014-05-05
+
+    - Fixes bugs relating to puzzle generation
+    - Fixes conflict display bug
+    - Fixes editing of given cell bug
+    - Given cells are now highlighted differently
+    - Added nicer application cover
+
+0.1 2014-01-25
+
+    - Initial release
