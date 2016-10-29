@@ -20,28 +20,25 @@ import Sailfish.Silica 1.0
 import "../pages"
 
 CoverBackground {
-    Column {
+    id: cover
+
+    Label {
         anchors.horizontalCenter: parent.horizontalCenter
-        spacing: 10
+        text: "Sudoku"
+    }
 
-        Label {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "Sudoku"
+    SudokuBoard {
+        id: coverBoard
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            verticalCenter: parent.verticalCenter
         }
-
-        SudokuBoard {
-            id: coverBoard
-            anchors.horizontalCenter: parent.horizontalCenter
-            cellSize: 20
-            autoSetup: false
-        }
-
-        Timer {
-            interval: 250
-            running: true
-
-            onTriggered: {
-                coverBoard.setup();
+        cellSize: 22
+        autoSetup: false
+        opacity: 10
+        onInactiveChanged: {
+            if (inactive) {
+                setup()
             }
         }
     }

@@ -17,6 +17,7 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "."
 
 Rectangle {
     property int cellSize
@@ -29,7 +30,7 @@ Rectangle {
     color: "transparent"
 
     border.color: Theme.secondaryColor
-    border.width: 2
+    border.width: Math.max(Math.round(2/50*cellSize),2)
 
     Grid {
         rows: 3
@@ -45,7 +46,7 @@ Rectangle {
                 width: cellSize
                 height: cellSize
                 border.color: isHighlighted ? Theme.highlightColor : Theme.primaryColor
-                border.width: isHighlighted ? 5 : 1
+                border.width: isHighlighted ? Math.max(Math.round(5/50*cellSize),3) : Math.max(Math.round(1/50*cellSize),1)
                 color: isConflict ? Theme.secondaryHighlightColor : "transparent"
 
                 property bool isHighlighted: false
@@ -58,6 +59,7 @@ Rectangle {
                 Text {
                     anchors.centerIn: parent
                     color: isInitial ? Theme.primaryColor : Theme.highlightColor
+                    font.pointSize: Math.round(cellSize * (24/50))
 
                     text: value == null ? '' : '' + value
                 }
