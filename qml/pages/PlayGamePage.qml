@@ -28,7 +28,6 @@ Page {
         id: silica
         anchors.fill: parent
         contentHeight: page.height
-        contentWidth: page.width
 
         SudokuBoard {
             id: board
