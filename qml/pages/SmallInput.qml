@@ -19,25 +19,46 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "."
 
-Page {
-    allowedOrientations: defaultAllowedOrientations
-    property variant board
+Item {
+    signal entry(int value)
+    height:numpad.height + erase.height + erase.anchors.topMargin
+    width:numpad.width
 
-    SilicaFlickable {
-        anchors.fill: parent
+    Grid {
+        id: numpad
+        rows: 3
+        columns: 3
+        spacing: 10
 
-        PageHeader {
-            title: 'Congratulations! You won!'
-        }
+        Repeater {
+            model: 9
 
-        PullDownMenu {
-            MenuItem {
-                text: 'New Game'
+            Button {
+                width: 90
+                height: (Screen.width / Screen.height >= 0.625) ? 75 : width
+                text: index + 1
 
                 onClicked: {
-                    board.generateBoardInBackground(true);
+                    entry(index + 1);
                 }
             }
+        }
+    }
+
+    Button {
+        id: erase
+        anchors {
+            top: numpad.bottom
+            horizontalCenter:parent.horizontalCenter
+            topMargin: 10
+        }
+
+        width: 90
+        height: (Screen.width / Screen.height >= 0.625) ? 75 : width
+        text: 'Erase'
+
+        onClicked: {
+            entry(0);
         }
     }
 }

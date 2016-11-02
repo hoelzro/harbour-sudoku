@@ -18,37 +18,44 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Grid {
-    rows: 4
-    columns: 3
-    spacing: 10
-
+Item {
     signal entry(int value)
+    height:numpad.height
+    width:numpad.width
 
-    Repeater {
-        model: 9
 
-        Button {
-            width: 90
-            height: width
-            text: index + 1
+    Grid {
+        id: numpad
+        rows: page.isPortrait ? 2 : 5
+        columns: page.isPortrait ? 5 : 2
+        spacing: 10
 
-            onClicked: {
-                entry(index + 1);
+        Repeater {
+            model: 9
+
+            Button {
+                width: 90
+                height:80
+                text: index + 1
+
+                onClicked: {
+                    entry(index + 1);
+                }
             }
         }
     }
 
-    Label {
-        width: 90
-        height: width
-        text: ''
-    }
+    Button{
+        id: erase
+        anchors {
+            bottom: numpad.bottom
+            right: numpad.right
+        }
 
-    Button {
         width: 90
-        height: width
+        height: 80
         text: 'Erase'
+
 
         onClicked: {
             entry(0);

@@ -20,32 +20,62 @@ import Sailfish.Silica 1.0
 import "."
 
 Page {
-
+    id: page
+    allowedOrientations: defaultAllowedOrientations
     property alias resume: board.resume
 
     SilicaFlickable {
+        id: silica
         anchors.fill: parent
+        contentHeight: page.height
+        contentWidth: page.width
 
-        Column {
-            anchors.horizontalCenter: parent.horizontalCenter
-            y: 40
-            spacing: 20
-
-            SudokuBoard {
-                id: board
-                anchors.topMargin: 10
-
-                cellSize: 50
-            }
-
-            NumberInput {
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                onEntry: {
-                    board.updateSelection(value == 0 ? null : value);
+        SudokuBoard {
+            id: board
+            y: Math.round(Screen.height * (40 / 960))
+            x: (Screen.width - width)/2
+            cellSize: (Screen.width - 2*y - 2*board.spacing) / 9
+            focus: true
+            onInactiveChanged: {
+                if (isSetup) {
+                    if (inactive) {
+                        save();
+                    }
                 }
             }
         }
+
+        Loader {
+            id: numinput
+            source: {
+                (ias >= 300 * scale)? "SmallInput.qml" :
+                "LargeInput.qml"
+            }
+            transformOrigin: page.isLandscape ? Item.Left : Item.Top
+            scale: (Screen.width / Screen.height >= 0.625)
+                   ? (board.cellSize * (24/50) / 24 - 1)*0.75 + 1 :    // feels more comfortable to have the scale
+                     board.cellSize * (24/50) / 24                     // in perfect sync with the board font size
+
+            property int ias: page.isPortrait ? Screen.height - (board.y + board.height) : Screen.height - (board.x + board.width)
+            property int margin: {
+                page.isLandscape ? (ias - (width*scale))/2 :
+                                   (ias - (height*scale))/2
+            }
+
+            x: page.isLandscape ? board.x + board.width + margin : 0
+            y: page.isLandscape ? 0 : board.y + board.height + margin
+            anchors.verticalCenter: page.isLandscape ? parent.verticalCenter : undefined
+            anchors.horizontalCenter: page.isLandscape ? undefined : parent.horizontalCenter
+        }
+
+        Connections {
+            target: numinput.item
+            onEntry: {
+                board.updateSelection(value == 0 ? null : value);
+            }
+        }
+
+        RemorsePopup { id: remorse }
 
         PullDownMenu {
             MenuItem {
@@ -58,21 +88,40 @@ Page {
             MenuItem {
                 text: "New Game"
                 onClicked: {
-                    board.reset();
+                    if (board.isGameOver()) {
+                        board.newGame();
+                    }
+                    else {
+                    remorse.execute("Generating", board.newGame);
+                    }
                 }
             }
-
+        }
+        PushUpMenu {
+            //in-game functions
+            MenuItem {
+                text: "Show Conflicts"
+                onClicked: {
+                    board.showConflicts();
+                }
+            }
             MenuItem {
                 text: "Give Me a Hint"
                 onClicked: {
                     board.giveHint();
                 }
             }
-
             MenuItem {
-                text: "Show Conflicts"
+                id: reset
+                text: "Reset Game"
                 onClicked: {
-                    board.showConflicts();
+                    if (board.isGameOver()) {
+                        board.clearBoard();
+                        enabled = false;
+                    }
+                    else {
+                    remorse.execute("Resetting", board.clearBoard);
+                    }
                 }
             }
         }

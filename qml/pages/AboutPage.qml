@@ -20,6 +20,7 @@ import Sailfish.Silica 1.0
 import "."
 
 Page {
+    allowedOrientations: defaultAllowedOrientations
     Column {
         anchors.fill: parent
 

@@ -22,18 +22,20 @@ import "."
 import "Sudoku.js" as S
 
 Grid {
-    id: board
+    id: oboard
     rows: 3
     columns: 3
-    spacing: 5
+    spacing: Math.round(Screen.height * (5 / 960))
 
     property int cellSize
-    property variant _currentSelection: null
+    property var _currentSelection: null
     property int modelId: -1
     property bool resume: true
     property bool autoSetup: true
+    property bool isSetup: false
+    property bool inactive: Qt.application.state === Qt.ApplicationInactive
 
-    property variant sudokuWorker: null
+    property var sudokuWorker: null
 
     function clearConflicts() {
         for(var block_no = 0; block_no < 9; block_no++) {
@@ -59,6 +61,26 @@ Grid {
                 board: this
             });
         }
+        setResetAvailablity();
+    }
+
+    function clearBoard() {
+        var s = S.getSudoku(modelId);
+        for(var row = 0; row < 9; row++) {
+          for(var col = 0; col < 9; col++) {
+            if(s.isInitialCell(row, col)) {
+              continue;
+            }
+            var data = getBlockForCoords(row, col);
+            var block = data[0];
+            var blockRow = data[1];
+            var blockCol = data[2];
+            block.set(blockRow, blockCol, null, false);
+            s.set(row, col, null);
+          }
+        }
+        clearConflicts();
+        reset.enabled = false;
     }
 
     Repeater {
@@ -96,6 +118,27 @@ Grid {
         return s.isGameOver();
     }
 
+    function setResetAvailablity() {
+        var s = S.getSudoku(modelId);
+        for(var row = 0; row < 9; row++) {
+          for(var col = 0; col < 9; col++) {
+              if (s.get(row, col) !== null) {
+                  if (!s.isInitialCell(row, col)) {
+                      reset.enabled = true;
+                      var foundUserInput = true;
+                      return;
+                  }
+                  else {
+                      foundUserInput = false;
+                  }
+              }
+          }
+        }
+        if (!foundUserInput) {
+            reset.enabled = false;
+        }
+    }
+
     function showConflicts() {
         var s         = S.getSudoku(modelId);
         var conflicts = s.getConflicts();
@@ -115,7 +158,7 @@ Grid {
         var s    = S.getSudoku(modelId);
         var hint = s.getHint();
 
-        if(hint == null) {
+        if(hint === null) {
             return;
         }
 
@@ -136,11 +179,11 @@ Grid {
     function openConnection() {
         var db = LocalStorage.openDatabaseSync('harbour-sudoku', '', 'Saved Game Data for Sudoku', 2000);
 
-        if(db.version == '') {
+        if(db.version === '') {
             db.changeVersion('', '2.0', function(txn) {
                 txn.executeSql('CREATE TABLE board (row INTEGER NOT NULL, column INTEGER NOT NULL, value INTEGER NOT NULL, is_initial INTEGER NOT NULL DEFAULT 0)');
             });
-        } else if(db.version != '2.0') {
+        } else if(db.version !== '2.0') {
             db.changeVersion('1.0', '2.0', function(txn) {
                 txn.executeSql('ALTER TABLE board ADD COLUMN is_initial INTEGER NOT NULL DEFAULT 0');
             });
@@ -191,7 +234,7 @@ Grid {
                     var value     = s.get(row, col);
                     var isInitial = s.isInitialCell(row, col);
 
-                    if(value != null) {
+                    if(value !== null) {
                         txn.executeSql('INSERT INTO board VALUES (?, ?, ?, ?)', [ row, col, value, isInitial ? 1 : 0 ]);
                     }
                 }
@@ -220,11 +263,14 @@ Grid {
                 block.set(bRow, bCol, value, s.isInitialCell(row, col));
             }
         }
+        if (cellSize > 22) {
+            setResetAvailablity();
+        }
     }
 
     function generateBoardInBackground(replace) {
         if(! sudokuWorker) {
-            sudokuWorker = Qt.createQmlObject("import QtQuick 2.0; WorkerScript { source: 'Sudoku.js'; onMessage: onBoardLoaded(messageObject) }", board);
+            sudokuWorker = Qt.createQmlObject("import QtQuick 2.0; WorkerScript { source: 'Sudoku.js'; onMessage: onBoardLoaded(messageObject) }", oboard);
         }
         sudokuWorker.sendMessage();
         if(replace) {
@@ -234,9 +280,10 @@ Grid {
         }
     }
 
-    function reset() {
+    function newGame() {
         generateBoardInBackground();
         clearConflicts();
+        reset.enabled = false;
     }
 
     function setup() {
@@ -247,7 +294,7 @@ Grid {
                     rows: rows,
                     bg:   false
                 });
-                return;
+                return isSetup = true;
             }
         }
 
@@ -257,6 +304,64 @@ Grid {
     Component.onCompleted: {
         if(autoSetup) {
             setup();
+        }
+    }
+// some physical keyboard support
+    Keys.onPressed: {
+        if (event.key === Qt.Key_Backspace) {
+            updateSelection(null);
+        }
+        if (event.key >= Qt.Key_0 && event.key <= Qt.Key_9) {
+            var value = event.key - Qt.Key_0;
+            updateSelection(value);
+        }
+        if (event.key === Qt.Key_Left || Qt.Key_Up || Qt.Key_Right || Qt.Key_Down) { // not necessary the best way to put it but works
+            if (_currentSelection === null) {
+                _currentSelection = blocks.itemAt(0).getCell(0,0);
+                _currentSelection.isHighlighted = true;
+                return;
+            }
+            if (event.key === Qt.Key_Left && _currentSelection.column - 1 < 0) {
+                var data = getBlockForCoords(_currentSelection.row, 8);
+            }
+            else if (event.key === Qt.Key_Left) {
+                var data = getBlockForCoords(_currentSelection.row, _currentSelection.column - 1);
+            }
+
+            if (event.key === Qt.Key_Up && _currentSelection.row - 1 < 0) {
+                var data = getBlockForCoords(8, _currentSelection.column);
+            }
+            else  if (event.key === Qt.Key_Up) {
+                var data = getBlockForCoords(_currentSelection.row - 1, _currentSelection.column);
+            }
+
+            if (event.key === Qt.Key_Right && _currentSelection.column + 1 > 8) {
+                var data = getBlockForCoords(_currentSelection.row, 0);
+            }
+            else if (event.key === Qt.Key_Right) {
+                var data = getBlockForCoords(_currentSelection.row, _currentSelection.column + 1);
+            }
+
+            if (event.key === Qt.Key_Down && _currentSelection.row + 1 > 8) {
+                var data = getBlockForCoords(0, _currentSelection.column);
+            }
+            else if (event.key === Qt.Key_Down) {
+                var data = getBlockForCoords(_currentSelection.row + 1, _currentSelection.column);
+            }
+
+            if (data === undefined) {
+                return;
+            }
+
+            var block = data[0];
+            var bRow  = data[1];
+            var bCol  = data[2];
+
+            if(_currentSelection) {
+                _currentSelection.isHighlighted = false;
+            }
+            _currentSelection = block.getCell(bRow, bCol);
+            _currentSelection.isHighlighted = true;
         }
     }
 }
