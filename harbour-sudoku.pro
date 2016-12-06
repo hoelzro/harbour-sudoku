@@ -14,7 +14,6 @@ OTHER_FILES   += \
     qml/pages/AboutPage.qml \
     qml/pages/Sudoku.js \
     qml/pages/SmallInput.qml \
-    qml/pages/LargeInput.qml \
     qml/harbour-sudoku.qml \
     rpm/harbour-sudoku.spec \
     rpm/harbour-sudoku.yaml \

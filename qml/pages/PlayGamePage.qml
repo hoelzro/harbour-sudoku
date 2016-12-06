@@ -44,18 +44,12 @@ Page {
             }
         }
 
-        Loader {
+        SmallInput {
             id: numinput
-            source: {
-                (ias >= 300 * scale)? "SmallInput.qml" :
-                "LargeInput.qml"
-            }
             transformOrigin: page.isLandscape ? Item.Left : Item.Top
-            scale: (Screen.width / Screen.height >= 0.625)
-                   ? (board.cellSize * (24/50) / 24 - 1)*0.75 + 1 :    // feels more comfortable to have the scale
-                     board.cellSize * (24/50) / 24                     // in perfect sync with the board font size
+            scale: (ias - (70 / 960 * Screen.height)) / height
 
-            property int ias: page.isPortrait ? Screen.height - (board.y + board.height) : Screen.height - (board.x + board.width)
+            property int ias: Screen.height - (board.y + board.height)
             property int margin: {
                 page.isLandscape ? (ias - (width*scale))/2 :
                                    (ias - (height*scale))/2
@@ -65,10 +59,6 @@ Page {
             y: page.isLandscape ? 0 : board.y + board.height + margin
             anchors.verticalCenter: page.isLandscape ? parent.verticalCenter : undefined
             anchors.horizontalCenter: page.isLandscape ? undefined : parent.horizontalCenter
-        }
-
-        Connections {
-            target: numinput.item
             onEntry: {
                 board.updateSelection(value == 0 ? null : value);
             }

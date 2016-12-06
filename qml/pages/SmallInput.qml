@@ -28,14 +28,14 @@ Item {
         id: numpad
         rows: 3
         columns: 3
-        spacing: 10
+        spacing: 10 / 32 * Theme.fontSizeMedium
 
         Repeater {
             model: 9
 
             Button {
-                width: 90
-                height: (Screen.width / Screen.height >= 0.625) ? 75 : width
+                width: 90 / 32 * Theme.fontSizeMedium
+                height: width
                 text: index + 1
 
                 onClicked: {
@@ -53,8 +53,8 @@ Item {
             topMargin: 10
         }
 
-        width: 90
-        height: (Screen.width / Screen.height >= 0.625) ? 75 : width
+        width: 90 / 32 * Theme.fontSizeMedium
+        height: width
         text: 'Erase'
 
         onClicked: {
