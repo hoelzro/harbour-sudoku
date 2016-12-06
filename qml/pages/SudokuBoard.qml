@@ -34,6 +34,7 @@ Grid {
     property bool autoSetup: true
     property bool isSetup: false
     property bool inactive: Qt.application.state === Qt.ApplicationInactive
+    property bool staticBoard: false
 
     property var sudokuWorker: null
 
@@ -263,7 +264,7 @@ Grid {
                 block.set(bRow, bCol, value, s.isInitialCell(row, col));
             }
         }
-        if (cellSize > 22) {
+        if (!staticBoard) {
             setResetAvailablity();
         }
     }
