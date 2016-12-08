@@ -23,23 +23,36 @@ CoverBackground {
     id: cover
 
     Label {
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            topMargin: Theme.paddingLarge
+            top: parent.top
+        }
         text: "Sudoku"
     }
 
     SudokuBoard {
         id: coverBoard
+        staticBoard: true
         anchors {
             horizontalCenter: parent.horizontalCenter
             verticalCenter: parent.verticalCenter
         }
-        cellSize: 22
-        autoSetup: false
+        cellSize: 22 / 234 * parent.width
+        autoSetup: true
         opacity: 10
         onInactiveChanged: {
             if (inactive) {
                 setup()
             }
+        }
+    }
+    Timer {
+        interval: 600
+        running: true
+
+        onTriggered: {
+            coverBoard.setup();
         }
     }
 }
