@@ -15,4 +15,4 @@ assert_jolla_connection
 
 ssh -i ~/SailfishOS/vmshare/ssh/private_keys/engine/mersdk mersdk@localhost -p 2222 "cd $(pwd | perl -npe 's{$ENV{HOME}}{/home/mersdk/share}'); mb2 -t SailfishOS-armv7hl build"
 scp -o ControlPath=/tmp/jolla.sock RPMS/harbour-sudoku*.rpm jolla:
-ssh -S /tmp/jolla.sock jolla 'pkcon --noninteractive install-local harbour-sudoku*.rpm'
+ssh -S /tmp/jolla.sock jolla 'devel-su pkcon --noninteractive install-local harbour-sudoku*.rpm'
