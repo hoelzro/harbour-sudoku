@@ -18,10 +18,10 @@
 // based on algorithm described in http://zhangroup.aporc.org/images/files/Paper_3485.pdf
 
 var exports = (function() {
-    const GRID_SIZE       = 9;
-    const BLOCK_SIZE      = 3;
-    const STARTING_CELLS  = 11;   // determined from paper, hardcoded for 9x9
-    const MAX_SOLVE_CALLS = 1000; // to avoid wasting time trying to find solutions for hard-to-solve puzzles;
+    var GRID_SIZE       = 9;
+    var BLOCK_SIZE      = 3;
+    var STARTING_CELLS  = 11;   // determined from paper, hardcoded for 9x9
+    var MAX_SOLVE_CALLS = 1000; // to avoid wasting time trying to find solutions for hard-to-solve puzzles;
                                   // just restart
 
     var ArrayUtils = {};
