@@ -1,3 +1,9 @@
+0.4 2017-04-01
+    - New Feature: Reset current game (thanks Ingvix!)
+    - Support for landscape orientation (thanks Ingvix!)
+    - Support for tablets (thanks Ingvix!)
+    - Improved cover UI (thanks Ingvix!)
+
 0.3 2015-01-09
 
     - Vertically align text on game generation view (thanks, Michal Parusinski!)
