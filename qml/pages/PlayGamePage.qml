@@ -44,21 +44,27 @@ Page {
             }
         }
 
-        SmallInput {
+        Loader {
             id: numinput
+            source: Screen.width / Screen.height < 0.75 ? "SmallInput.qml" : "LargeInput.qml"
             transformOrigin: page.isLandscape ? Item.Left : Item.Top
-            scale: (ias - (70 / 960 * Screen.height)) / height
+            scale: Screen.width / Screen.height >= 0.75 && page.isLandscape ? (availableSpace - (70 / 960 * Screen.height)) / width
+                                                                            : (availableSpace - (70 / 960 * Screen.height)) / height
 
-            property int ias: Screen.height - (board.y + board.height)
+            property int availableSpace: Screen.height - (board.y + board.height)
             property int margin: {
-                page.isLandscape ? (ias - (width*scale))/2 :
-                                   (ias - (height*scale))/2
+                page.isLandscape ? (availableSpace - (width*scale))/2
+                                 : (availableSpace - (height*scale))/2
             }
 
             x: page.isLandscape ? board.x + board.width + margin : 0
             y: page.isLandscape ? 0 : board.y + board.height + margin
             anchors.verticalCenter: page.isLandscape ? parent.verticalCenter : undefined
             anchors.horizontalCenter: page.isLandscape ? undefined : parent.horizontalCenter
+        }
+
+        Connections {
+            target: numinput.item
             onEntry: {
                 board.updateSelection(value == 0 ? null : value);
             }
