@@ -21,6 +21,9 @@ import "."
 
 Item {
     signal entry(int value)
+    property var dragComponent
+    property bool eraseEnabled
+    property bool dragEnabled: configurations.draggingEnabled
     height:numpad.height
     width:numpad.width
 
@@ -34,20 +37,25 @@ Item {
             model: 10
 
             MouseArea {
+                property color color: drag.active ? Theme.highlightColor : Theme.primaryColor
+                id: mouseArea
                 height: 90 / 32 * Theme.fontSizeMedium
                 width: height
+                preventStealing: dragEnabled
+                enabled: index === 9 ? eraseEnabled : true
 
                 Rectangle {
                     anchors.fill: parent
                     color: parent.pressed ? Theme.rgba(Theme.highlightBackgroundColor, Theme.highlightBackgroundOpacity)
-                                          : Theme.rgba(Theme.primaryColor, 0.2)
+                                          : Theme.rgba(parent.color, 0.2)
                     radius: Theme.paddingSmall
-                }
+                    opacity: parent.enabled ? 1.0 : 0.4
 
-                Label {
-                    text: index < 9 ? index + 1 : 'Erase'
-                    anchors.centerIn: parent
-                    color: parent.pressed ? Theme.highlightColor : Theme.primaryColor
+                    Label {
+                        text: index < 9 ? index + 1 : 'Erase'
+                        anchors.centerIn: parent
+                        color: mouseArea.pressed ? Theme.highlightColor : mouseArea.color
+                    }
                 }
 
                 onClicked: {
@@ -56,6 +64,14 @@ Item {
                     }
                     else entry(index + 1);
                 }
+
+                drag.target: dragEnabled
+                             ? drag.active
+                               ? index = 9
+                                 ? dragComponent.createObject(this, {trueOpacity: 1, iconVisible: true})
+                                 : dragComponent.createObject(this, {index: index + 1})
+                               : this
+                             : undefined
             }
         }
     }

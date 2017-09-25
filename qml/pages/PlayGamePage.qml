@@ -35,6 +35,7 @@ Page {
             x: (Screen.width - width)/2
             cellSize: (Screen.width - 2*y - 2*board.spacing) / 9
             focus: true
+            dragComponent: dragComponent
             onInactiveChanged: {
                 if (isSetup) {
                     if (inactive) {
@@ -52,21 +53,187 @@ Page {
                                                                             : (availableSpace - (70 / 960 * Screen.height)) / height
 
             property int availableSpace: Screen.height - (board.y + board.height)
-            property int margin: {
-                page.isLandscape ? (availableSpace - (width*scale))/2
+            property int margin: page.isLandscape
+                                 ? (availableSpace - (width*scale))/2
                                  : (availableSpace - (height*scale))/2
-            }
 
             x: page.isLandscape ? board.x + board.width + margin : 0
             y: page.isLandscape ? 0 : board.y + board.height + margin
             anchors.verticalCenter: page.isLandscape ? parent.verticalCenter : undefined
             anchors.horizontalCenter: page.isLandscape ? undefined : parent.horizontalCenter
+            onLoaded: {
+                item.dragComponent = dragComponent;
+                item.eraseEnabled = Qt.binding(function() {return reset.enabled});
+            }
         }
 
         Connections {
             target: numinput.item
-            onEntry: {
-                board.updateSelection(value == 0 ? null : value);
+            onEntry: board.updateSelection(value == 0 ? null : value)
+        }
+
+        Component {
+            id: dragComponent
+            Item {
+                property bool dragActive: parent.drag.active
+                property var lastActiveDragTarget: null
+                property var lastDragTarget: null
+                property var mapped
+                property var index
+                property real trueOpacity: Theme.highlightBackgroundOpacity * 1.5
+                property int dropSizeMultiplier: board.cellSize / 50
+                property alias iconVisible: dragIcon.visible
+
+                signal entry(int value)
+                onEntry: board.updateSelection(value == 0 ? null : value)
+
+                id: dragIndicator
+                scale: 0.25 * dropSizeMultiplier
+                opacity: 0
+                x: parent.mouseX
+                y: parent.mouseY
+
+                onDragActiveChanged: {
+                    if (!parent.drag.active) {
+                        if (lastActiveDragTarget !== null && !lastActiveDragTarget.isInitial) {
+                            mapped = parent.mapFromItem(lastActiveDragTarget,
+                                                        lastActiveDragTarget.width/2 - width/2,
+                                                        lastActiveDragTarget.height/2 - height/2);
+                            state = "Entry";
+                        }
+                        else {
+                            state = "NoEntry";
+                        }
+                    }
+                }
+                Drag.active: parent.drag.active
+                Drag.onTargetChanged: {
+                    if (parent.drag.active) lastActiveDragTarget = Drag.target;
+                    if (Drag.target !== null) lastDragTarget = Drag.target;
+                    if (lastActiveDragTarget === null) lastDragTarget.cellNotSelected();
+                }
+
+                Component.onCompleted: state = "Active"
+
+                Label {
+
+                    id: dragLabel
+                    text: index ? index : ""
+                    color: Theme.highlightColor
+                    font.pixelSize: Theme.fontSizeMedium * 4
+                    x: - width/2
+                    y: - height/2
+                }
+
+                Image {
+                    id: dragIcon
+                    source: "image://theme/icon-l-clear?" + Theme.highlightColor
+                    visible: false
+                    x: - width/2
+                    y: - height/2
+                }
+
+                states: [
+                    State {
+                        name: "Entry"
+                        PropertyChanges {
+                            target: dragIndicator
+                            scale: 0.25 * dropSizeMultiplier
+                            opacity: trueOpacity === 1 ? 0 : 1
+                            x: dragIndicator.mapped.x
+                            y: dragIndicator.mapped.y
+                        }
+                    },
+                    State {
+                        name: "NoEntry"
+                        PropertyChanges {
+                            target: dragIndicator
+                            scale: 0.25 * dropSizeMultiplier
+                            opacity: 0
+                        }
+                    },
+                    State {
+                        name: "Active"
+                        PropertyChanges {
+                            target: dragIndicator
+                            scale: 1
+                            opacity: trueOpacity
+                        }
+                    }
+
+                ]
+                transitions: [
+                    Transition {
+                        to: "Entry"
+                        SequentialAnimation {
+                            ScriptAction {script: entry(0)}
+                            ParallelAnimation {
+                                NumberAnimation {
+                                    target: dragIndicator
+                                    property: "scale"
+                                    duration: 200
+                                    easing.type: Easing.InOutQuad
+                                }
+                                NumberAnimation {
+                                    target: dragIndicator
+                                    property: "opacity"
+                                    duration: 200
+                                    easing.type: Easing.InOutQuad
+                                }
+                                NumberAnimation {
+                                    target: dragIndicator
+                                    property: "y"
+                                    duration: 200
+                                    easing.type: Easing.InOutQuad
+                                }
+                                NumberAnimation {
+                                    target: dragIndicator
+                                    property: "x"
+                                    duration: 200
+                                    easing.type: Easing.InOutQuad
+                                }
+                            }
+                            ScriptAction {script: {entry(index); dragIndicator.destroy();}}
+                        }
+                    },
+                    Transition {
+                        to: "NoEntry"
+                        SequentialAnimation {
+                            ParallelAnimation {
+                                NumberAnimation {
+                                    target: dragIndicator
+                                    property: "scale"
+                                    duration: 200
+                                    easing.type: Easing.InOutQuad
+                                }
+                                NumberAnimation {
+                                    target: dragIndicator
+                                    property: "opacity"
+                                    duration: 200
+                                    easing.type: Easing.InOutQuad
+                                }
+                            }
+                            ScriptAction {script: dragIndicator.destroy()}
+                        }
+                    },
+                    Transition {
+                        to: "Active"
+                        ParallelAnimation {
+                            NumberAnimation {
+                                target: dragIndicator
+                                property: "scale"
+                                duration: 200
+                                easing.type: Easing.InOutQuad
+                            }
+                            NumberAnimation {
+                                target: dragIndicator
+                                property: "opacity"
+                                duration: 200
+                                easing.type: Easing.InOutQuad
+                            }
+                        }
+                    }
+                ]
             }
         }
 
@@ -79,7 +246,12 @@ Page {
                     pageStack.push(Qt.resolvedUrl('AboutPage.qml'));
                 }
             }
-
+            MenuItem {
+                text: "Settings"
+                onClicked: {
+                    pageStack.push(Qt.resolvedUrl('Settings.qml'));
+                }
+            }
             MenuItem {
                 text: "New Game"
                 onClicked: {
@@ -87,7 +259,7 @@ Page {
                         board.newGame();
                     }
                     else {
-                    remorse.execute("Generating", board.newGame);
+                    remorse.execute("Generating", board.newGame, 3000);
                     }
                 }
             }
@@ -99,6 +271,7 @@ Page {
                 onClicked: {
                     board.showConflicts();
                 }
+                enabled: reset.enabled
             }
             MenuItem {
                 text: "Give Me a Hint"
@@ -112,10 +285,9 @@ Page {
                 onClicked: {
                     if (board.isGameOver()) {
                         board.clearBoard();
-                        enabled = false;
                     }
                     else {
-                    remorse.execute("Resetting", board.clearBoard);
+                    remorse.execute("Resetting", board.clearBoard, 3000);
                     }
                 }
             }

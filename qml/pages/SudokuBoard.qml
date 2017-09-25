@@ -22,7 +22,7 @@ import "."
 import "Sudoku.js" as S
 
 Grid {
-    id: oboard
+    id: oBoard
     rows: 3
     columns: 3
     spacing: Math.round(Screen.height * (5 / 960))
@@ -35,6 +35,7 @@ Grid {
     property bool isSetup: false
     property bool inactive: Qt.application.state === Qt.ApplicationInactive
     property bool staticBoard: false
+    property var dragComponent
 
     property var sudokuWorker: null
 
@@ -82,6 +83,7 @@ Grid {
         }
         clearConflicts();
         reset.enabled = false;
+
     }
 
     Repeater {
@@ -91,14 +93,18 @@ Grid {
         SudokuBlock {
             cellSize: parent.cellSize
             blockNumber: index
+            dragComponent: oBoard.dragComponent
 
             onCellSelected: {
                 if(_currentSelection) {
-                    _currentSelection.isHighlighted = false
+                    _currentSelection.isHighlighted = false;
                 }
-                _currentSelection = cell
-                cell.isHighlighted = true;
+                _currentSelection = cell;
+                if (cell !== null) {
+                    cell.isHighlighted = true;
+                }
             }
+            onEntry: updateSelection(value)
         }
     }
 
@@ -271,7 +277,7 @@ Grid {
 
     function generateBoardInBackground(replace) {
         if(! sudokuWorker) {
-            sudokuWorker = Qt.createQmlObject("import QtQuick 2.0; WorkerScript { source: 'Sudoku.js'; onMessage: onBoardLoaded(messageObject) }", oboard);
+            sudokuWorker = Qt.createQmlObject("import QtQuick 2.0; WorkerScript { source: 'Sudoku.js'; onMessage: onBoardLoaded(messageObject) }", oBoard);
         }
         sudokuWorker.sendMessage();
         if(replace) {

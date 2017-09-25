@@ -18,4 +18,5 @@ OTHER_FILES   += \
     qml/harbour-sudoku.qml \
     rpm/harbour-sudoku.spec \
     rpm/harbour-sudoku.yaml \
-    harbour-sudoku.desktop
+    harbour-sudoku.desktop \
+    qml/pages/Settings.qml
