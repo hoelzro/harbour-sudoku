@@ -58,7 +58,7 @@ Dialog {
     }
     ConfigurationValue {
         id: draggingEnabled
-        key: "/app/harbour-sudoku/settings/draggingEnabled"
+        key: "/apps/harbour-sudoku/settings/draggingEnabled"
         defaultValue: false
     }
 }

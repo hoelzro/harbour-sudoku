@@ -22,7 +22,6 @@ import "."
 Rectangle {
     property int cellSize
     property int blockNumber
-    property var dragComponent
     property bool dragEnabled: configurations.draggingEnabled
 
     signal cellSelected (variant cell)

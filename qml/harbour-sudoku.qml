@@ -27,7 +27,7 @@ ApplicationWindow {
 
     ConfigurationGroup {
         id: configurations
-        path: "/app/harbour-sudoku/settings"
+        path: "/apps/harbour-sudoku/settings"
         property bool draggingEnabled
     }
 }

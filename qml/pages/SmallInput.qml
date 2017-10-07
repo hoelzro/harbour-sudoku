@@ -22,7 +22,7 @@ import "."
 Item {
     signal entry(int value)
     property var dragComponent
-    property bool eraseEnabled
+    property bool eraseEnabled: reset.enabled
     property bool dragEnabled: configurations.draggingEnabled
     height:numpad.height + erase.height + erase.anchors.topMargin
     width:numpad.width

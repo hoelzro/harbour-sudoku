@@ -93,7 +93,6 @@ Grid {
         SudokuBlock {
             cellSize: parent.cellSize
             blockNumber: index
-            dragComponent: oBoard.dragComponent
 
             onCellSelected: {
                 if(_currentSelection) {

@@ -35,7 +35,6 @@ Page {
             x: (Screen.width - width)/2
             cellSize: (Screen.width - 2*y - 2*board.spacing) / 9
             focus: true
-            dragComponent: dragComponent
             onInactiveChanged: {
                 if (isSetup) {
                     if (inactive) {
@@ -62,8 +61,6 @@ Page {
             anchors.verticalCenter: page.isLandscape ? parent.verticalCenter : undefined
             anchors.horizontalCenter: page.isLandscape ? undefined : parent.horizontalCenter
             onLoaded: {
-                item.dragComponent = dragComponent;
-                item.eraseEnabled = Qt.binding(function() {return reset.enabled});
             }
         }
 
