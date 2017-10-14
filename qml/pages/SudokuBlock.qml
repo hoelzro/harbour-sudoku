@@ -75,10 +75,12 @@ Rectangle {
                     font.pointSize: Math.round(cellSize * (24/50))
 
                     onTextChanged: {
-                        valueBehavior.enabled = false
-                        scale = 1.2
-                        valueBehavior.enabled = true
-                        scale = 1
+                        if (!setUpTimer.running) {
+                            valueBehavior.enabled = false
+                            scale = 1.2
+                            valueBehavior.enabled = true
+                            scale = 1
+                        }
                     }
 
                     Behavior on scale {
@@ -119,6 +121,11 @@ Rectangle {
                             }
                         }
                     ]
+                    Timer {
+                        id: setUpTimer
+                        interval: 200
+                        running: true
+                    }
                 }
 
                 DropArea {
