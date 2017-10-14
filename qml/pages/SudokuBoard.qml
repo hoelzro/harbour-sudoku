@@ -35,7 +35,6 @@ Grid {
     property bool isSetup: false
     property bool inactive: Qt.application.state === Qt.ApplicationInactive
     property bool staticBoard: false
-    property var dragComponent
 
     property var sudokuWorker: null
 
