@@ -25,14 +25,13 @@ Dialog {
 
     onAccepted: {
         if (dragging.enabled) {
-            draggingEnabled.value = dragging.checked
+            configurations.draggingEnabled = dragging.checked
         }
     }
 
     SilicaFlickable {
         anchors.fill: parent
         Column {
-            spacing: Theme.paddingMedium
 
             anchors {
                 left: parent.left
@@ -50,15 +49,10 @@ Dialog {
             TextSwitch {
                 id: dragging
                 width: parent.width
-                checked: draggingEnabled.value
+                checked: configurations.draggingEnabled
                 text: "Enable drag and drop"
                 description: "Allows you to drag and drop value from button to cell and from selected cell to another"
             }
         }
-    }
-    ConfigurationValue {
-        id: draggingEnabled
-        key: "/apps/harbour-sudoku/settings/draggingEnabled"
-        defaultValue: false
     }
 }
