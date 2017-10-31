@@ -21,6 +21,8 @@ import "."
 
 Item {
     signal entry(int value)
+    property bool eraseEnabled: reset.enabled
+    property bool dragEnabled: configurations.draggingEnabled
     height:numpad.height + erase.height + erase.anchors.topMargin
     width:numpad.width
 
@@ -37,10 +39,12 @@ Item {
                 width: 90 / 32 * Theme.fontSizeMedium
                 height: width
                 text: index + 1
+                color: drag.active ? Theme.highlightColor : Theme.primaryColor
+                preventStealing: dragEnabled
 
-                onClicked: {
-                    entry(index + 1);
-                }
+                onClicked: entry(index + 1)
+
+                drag.target: dragEnabled ? drag.active ? dragComponent.createObject(this, {index: index + 1}) : this : undefined
             }
         }
     }
@@ -49,16 +53,19 @@ Item {
         id: erase
         anchors {
             top: numpad.bottom
-            horizontalCenter:parent.horizontalCenter
+            horizontalCenter: parent.horizontalCenter
             topMargin: 10
         }
 
         width: 90 / 32 * Theme.fontSizeMedium
         height: width
         text: 'Erase'
+        color: drag.active ? Theme.highlightColor : Theme.primaryColor
+        preventStealing: dragEnabled
+        enabled: eraseEnabled
 
-        onClicked: {
-            entry(0);
-        }
+        onClicked: entry(0);
+
+        drag.target: dragEnabled ? drag.active ? dragComponent.createObject(this, {trueOpacity: 1, iconVisible: true}) : this : undefined
     }
 }

@@ -18,9 +18,16 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "pages"
+import Nemo.Configuration 1.0
 
 ApplicationWindow {
     initialPage: Component { PlayGamePage { } }
 
     cover: Qt.resolvedUrl('cover/CoverPage.qml')
+
+    ConfigurationGroup {
+        id: configurations
+        path: "/apps/harbour-sudoku/settings"
+        property bool draggingEnabled
+    }
 }

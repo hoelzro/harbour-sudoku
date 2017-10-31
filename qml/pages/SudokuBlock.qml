@@ -22,8 +22,10 @@ import "."
 Rectangle {
     property int cellSize
     property int blockNumber
+    property bool dragEnabled: configurations.draggingEnabled
 
     signal cellSelected (variant cell)
+    signal entry (int value)
 
     width: cellSize * 3
     height: cellSize * 3
@@ -53,20 +55,106 @@ Rectangle {
                 property int row:    Math.floor(blockNumber / 3) * 3 + Math.floor(index / 3)
                 property int column: (blockNumber % 3) * 3 + (index % 3)
                 property variant value: null
+                onValueChanged: {
+                    if (value === null) {
+                        selfLabel.state = "Empty"
+                    }
+                    else if (value !== null) {
+                        selfLabel.state = ""
+                        selfLabel.text = '' + value
+                    }
+                }
+
                 property bool isConflict: false
                 property bool isInitial: false
 
                 Text {
+                    id: selfLabel
                     anchors.centerIn: parent
                     color: isInitial ? Theme.primaryColor : Theme.highlightColor
                     font.pointSize: Math.round(cellSize * (24/50))
 
-                    text: value == null ? '' : '' + value
+                    onTextChanged: {
+                        if (!setUpTimer.running) {
+                            valueBehavior.enabled = false
+                            scale = 1.2
+                            valueBehavior.enabled = true
+                            scale = 1
+                        }
+                    }
+
+                    Behavior on scale {
+                        id: valueBehavior
+                        enabled: false
+                        NumberAnimation {duration: 200; easing.type: Easing.OutQuart}
+                    }
+
+                    states: [
+                        State {
+                            name: "Empty"
+                            PropertyChanges {
+                                target: selfLabel
+                                text: ''
+                            }
+                        }
+                    ]
+                    transitions: [
+                        Transition {
+                            to: "Empty"
+                            SequentialAnimation {
+                                NumberAnimation {
+                                    target: selfLabel
+                                    property: "opacity"
+                                    to: 0
+                                    duration: 150
+                                    easing.type: Easing.InOutQuad
+                                }
+                                PropertyAction {
+                                    target: selfLabel
+                                    property: "text"
+                                }
+                                PropertyAction {
+                                    target: selfLabel
+                                    property: "opacity"
+                                    value: 1
+                                }
+                            }
+                        }
+                    ]
+                    Timer {
+                        id: setUpTimer
+                        interval: 200
+                        running: true
+                    }
+                }
+
+                DropArea {
+                    signal cellNotSelected
+                    property bool isInitial: self.isInitial
+                    onCellNotSelected: cellSelected(null)
+                    anchors.fill: parent
+                    onEntered: cellSelected(self)
                 }
 
                 MouseArea {
+                    id: mouseArea
                     anchors.fill: parent
                     onClicked: cellSelected(self)
+                    preventStealing: dragEnabled && !self.isInitial && self.isHighlighted && selfLabel.text !== ''
+
+                    drag.target: dragEnabled && !self.isInitial && self.isHighlighted && selfLabel.text !== '' ? this : undefined
+
+                    drag.onActiveChanged: {
+                        if (drag.active) {
+                            drag.target = dragComponent.createObject(this,{index: selfLabel.text});
+                            updateSelection(null);
+                        }
+                        else {
+                            drag.target = Qt.binding(function() {return dragEnabled && !self.isInitial && self.isHighlighted && selfLabel.text !== ''
+                                                                 ? parent
+                                                                 : undefined});
+                        }
+                    }
                 }
             }
         }
