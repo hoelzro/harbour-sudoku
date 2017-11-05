@@ -18,7 +18,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "pages"
-import Nemo.Configuration 1.0
+import org.nemomobile.configuration 1.0
 
 ApplicationWindow {
     initialPage: Component { PlayGamePage { } }
@@ -28,6 +28,6 @@ ApplicationWindow {
     ConfigurationGroup {
         id: configurations
         path: "/apps/harbour-sudoku/settings"
-        property bool draggingEnabled
+        property bool draggingEnabled: false
     }
 }
