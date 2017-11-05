@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x -e
+
 function assert_mer_running {
     VBoxManage list runningvms | grep -q MerSDK || (VBoxManage startvm MerSDK --type=headless ; sleep 30)
 }
