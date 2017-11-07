@@ -3,7 +3,7 @@
 set -x -e
 
 function assert_mer_running {
-    VBoxManage list runningvms | grep -q MerSDK || (VBoxManage startvm MerSDK --type=headless ; sleep 30)
+    VBoxManage list runningvms | grep -q 'Sailfish OS Build Engine' || (VBoxManage startvm 'Sailfish OS Build Engine' --type=headless ; sleep 30)
 }
 
 function assert_jolla_connection {
