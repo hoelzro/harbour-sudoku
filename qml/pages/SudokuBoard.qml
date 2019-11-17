@@ -35,6 +35,7 @@ Grid {
     property bool isSetup: false
     property bool inactive: Qt.application.state === Qt.ApplicationInactive
     property bool staticBoard: false
+    property bool pencilEnabled: false
 
     property var sudokuWorker: null
 
@@ -44,15 +45,39 @@ Grid {
         }
     }
 
+    function toggleBitValue(field, index) {
+        var isSet = field & (1 << index)
+        return setBitValue(field, index, !isSet)
+    }
+
+    function setBitValue(field, index, value) {
+        if (value)
+            field |= (1 << index)
+        else
+            field &= ~(1 << index)
+        return field
+    }
+
     function updateSelection(value) {
         if(_currentSelection) {
             var s = S.getSudoku(modelId);
             if(s.isInitialCell(_currentSelection.row, _currentSelection.column)) {
                 return;
             }
-            _currentSelection.value = value;
 
-            s.set(_currentSelection.row, _currentSelection.column, value);
+            if (oBoard.pencilEnabled) {
+                if (_currentSelection.value === null) {
+                    _currentSelection.pencil = toggleBitValue(_currentSelection.pencil, value-1);
+                    s.setPencil(_currentSelection.row, _currentSelection.column, _currentSelection.pencil)
+                } else {
+                    return
+                }
+            } else {
+                _currentSelection.value = value;
+                _currentSelection.pencil = 0
+                s.set(_currentSelection.row, _currentSelection.column, value);
+                s.setPencil(_currentSelection.row, _currentSelection.column, 0);
+            }
         }
 
         clearConflicts();
@@ -76,8 +101,9 @@ Grid {
             var block = data[0];
             var blockRow = data[1];
             var blockCol = data[2];
-            block.set(blockRow, blockCol, null, false);
+            block.set(blockRow, blockCol, null, false, 0);
             s.set(row, col, null);
+            s.setPencil(row, col, 0);
           }
         }
         clearConflicts();
@@ -127,7 +153,7 @@ Grid {
         var s = S.getSudoku(modelId);
         for(var row = 0; row < 9; row++) {
           for(var col = 0; col < 9; col++) {
-              if (s.get(row, col) !== null) {
+              if (s.get(row, col) !== null || s.getPencil(row, col) !== 0) {
                   if (!s.isInitialCell(row, col)) {
                       reset.enabled = true;
                       var foundUserInput = true;
@@ -185,12 +211,18 @@ Grid {
         var db = LocalStorage.openDatabaseSync('harbour-sudoku', '', 'Saved Game Data for Sudoku', 2000);
 
         if(db.version === '') {
-            db.changeVersion('', '2.0', function(txn) {
-                txn.executeSql('CREATE TABLE board (row INTEGER NOT NULL, column INTEGER NOT NULL, value INTEGER NOT NULL, is_initial INTEGER NOT NULL DEFAULT 0)');
+            db.changeVersion('', '2.1', function(txn) {
+                txn.executeSql('CREATE TABLE board (row INTEGER NOT NULL, column INTEGER NOT NULL, value INTEGER NOT NULL, is_initial INTEGER NOT NULL DEFAULT 0, pencil INTEGER NOT NULL DEFAULT 0)');
             });
-        } else if(db.version !== '2.0') {
+        }
+        if(db.version === '1.0') {
             db.changeVersion('1.0', '2.0', function(txn) {
                 txn.executeSql('ALTER TABLE board ADD COLUMN is_initial INTEGER NOT NULL DEFAULT 0');
+            });
+        }
+        if(db.version === '2.0') {
+            db.changeVersion('2.0', '2.1', function(txn) {
+                txn.executeSql('ALTER TABLE board ADD COLUMN pencil INTEGER NOT NULL DEFAULT 0');
             });
         }
 
@@ -204,15 +236,16 @@ Grid {
 
         try {
             db.readTransaction(function(txn) {
-                var result = txn.executeSql('SELECT row, column, value, is_initial FROM board');
+                var result = txn.executeSql('SELECT row, column, value, is_initial, pencil FROM board');
 
                 for(var i = 0; i < result.rows.length; i++) {
                     var row = result.rows.item(i);
                     rows.push({
                         row: row.row,
                         column: row.column,
-                        value: row.value,
-                        isInitial: row.is_initial
+                        value: row.value === 0 ? null : row.value,
+                        isInitial: row.is_initial,
+                        pencil: row.pencil
                     });
                 }
             });
@@ -224,7 +257,7 @@ Grid {
             }
         }
 
-        return rows.length == 0 ? null : rows;
+        return rows.length === 0 ? null : rows;
     }
 
     function save() {
@@ -238,9 +271,12 @@ Grid {
                 for(var col = 0; col < 9; col++) {
                     var value     = s.get(row, col);
                     var isInitial = s.isInitialCell(row, col);
+                    var pencil    = s.getPencil(row, col);
 
-                    if(value !== null) {
-                        txn.executeSql('INSERT INTO board VALUES (?, ?, ?, ?)', [ row, col, value, isInitial ? 1 : 0 ]);
+                    if(value !== null || pencil > 0) {
+                        if (value === null)
+                            value = 0
+                        txn.executeSql('INSERT INTO board VALUES (?, ?, ?, ?, ?)', [ row, col, value, isInitial ? 1 : 0, pencil]);
                     }
                 }
             }
@@ -259,13 +295,14 @@ Grid {
         for(var row = 0; row < 9; row++) {
             for(var col = 0; col < 9; col++) {
                 var value = s.get(row, col);
+                var pencil = s.getPencil(row, col);
 
                 var data  = getBlockForCoords(row, col);
                 var block = data[0];
                 var bRow  = data[1];
                 var bCol  = data[2];
-
-                block.set(bRow, bCol, value, s.isInitialCell(row, col));
+                if (block)
+                    block.set(bRow, bCol, value, s.isInitialCell(row, col), pencil);
             }
         }
         if (!staticBoard) {

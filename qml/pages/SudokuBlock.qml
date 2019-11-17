@@ -48,12 +48,13 @@ Rectangle {
                 width: cellSize
                 height: cellSize
                 border.color: isHighlighted ? Theme.highlightColor : Theme.primaryColor
-                border.width: isHighlighted ? Math.max(Math.round(5/50*cellSize),3) : Math.max(Math.round(1/50*cellSize),1)
+                border.width: isHighlighted ? Math.max(Math.round(3/50*cellSize),2) : Math.max(Math.round(1/50*cellSize),1)
                 color: isConflict ? Theme.secondaryHighlightColor : "transparent"
 
                 property bool isHighlighted: false
                 property int row:    Math.floor(blockNumber / 3) * 3 + Math.floor(index / 3)
                 property int column: (blockNumber % 3) * 3 + (index % 3)
+                property int pencil: 0
                 property variant value: null
                 onValueChanged: {
                     if (value === null) {
@@ -63,10 +64,17 @@ Rectangle {
                         selfLabel.state = ""
                         selfLabel.text = '' + value
                     }
+                    pencil = 0
                 }
 
                 property bool isConflict: false
                 property bool isInitial: false
+
+                PencilOverlay {
+                    id: pencilOverlay
+                    anchors.fill: parent
+                    value: self.pencil
+                    visible: selfLabel.state === "Empty"                }
 
                 Text {
                     id: selfLabel
@@ -160,13 +168,14 @@ Rectangle {
         }
     }
 
-    function set(row, col, value, isInitial) {
+    function set(row, col, value, isInitial, pencil) {
         var index = row * 3 + col;
         var cell  = cells.itemAt(index);
 
         // XXX can we update the current binding?
         cell.value     = Qt.binding(function() { return value; });
         cell.isInitial = isInitial;
+        cell.pencil = pencil;
     }
 
     function markAsConflict(row, col) {

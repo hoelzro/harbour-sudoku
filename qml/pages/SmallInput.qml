@@ -23,6 +23,7 @@ Item {
     signal entry(int value)
     property bool eraseEnabled: reset.enabled
     property bool dragEnabled: configurations.draggingEnabled
+    property alias pencilEnabled: pencil.selected
     height:numpad.height + erase.height + erase.anchors.topMargin
     width:numpad.width
 
@@ -53,7 +54,7 @@ Item {
         id: erase
         anchors {
             top: numpad.bottom
-            horizontalCenter: parent.horizontalCenter
+            left: parent.left
             topMargin: 10
         }
 
@@ -64,8 +65,26 @@ Item {
         preventStealing: dragEnabled
         enabled: eraseEnabled
 
-        onClicked: entry(0);
+        onClicked: {
+            pencil.selected = false
+            entry(0)
+        }
 
         drag.target: dragEnabled ? drag.active ? dragComponent.createObject(this, {trueOpacity: 1, iconVisible: true}) : this : undefined
+    }
+    Button {
+        id: pencil
+        property bool selected: false
+        anchors {
+            top: numpad.bottom
+            right: parent.right
+            topMargin: 10
+        }
+
+        width: erase.width
+        height: width
+        text: 'Pencil'
+        color: selected ? Theme.highlightColor : Theme.primaryColor
+        onClicked: selected = !selected
     }
 }
