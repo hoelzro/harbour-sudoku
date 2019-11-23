@@ -280,6 +280,12 @@ Page {
                 }
             }
             MenuItem {
+                text: "Fill in pencil values"
+                onClicked: {
+                    board.generatePencilValues();
+                }
+            }
+            MenuItem {
                 id: reset
                 text: "Reset Game"
                 onClicked: {

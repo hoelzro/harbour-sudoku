@@ -190,6 +190,57 @@ Grid {
         }
     }
 
+    function generatePencilValues() {
+        var s = S.getSudoku(modelId);
+        var blockList = []
+        var rowList = []
+        var colList = []
+        var b, r, c, bRow, bCol, cell
+
+        for (var i = 0; i < 9; i++) {
+            blockList[i] = [0,0,0,0,0,0,0,0,0]
+            rowList[i] = [0,0,0,0,0,0,0,0,0]
+            colList[i] = [0,0,0,0,0,0,0,0,0]
+        }
+
+        //Add current cell values to lookup tables for blocks, rows and columns
+        for (r = 0; r < 9; r++) {
+            for (c = 0; c < 9; c++) {
+                b = Math.floor(r / 3) * 3 + Math.floor(c / 3)
+                bRow = Math.floor(r % 3)
+                bCol = Math.floor(c % 3)
+                cell = blocks.itemAt(b).getCell(bRow, bCol)
+                if (cell === null || cell.value === null)
+                    continue
+
+                blockList[b][cell.value-1] = 1
+                rowList[r][cell.value-1] = 1
+                colList[c][cell.value-1] = 1
+            }
+        }
+
+        //Update cells with pencil values
+        for (r = 0; r < 9; r++) {
+            for (c = 0; c < 9; c++) {
+                b = Math.floor(r / 3) * 3 + Math.floor(c / 3)
+                bRow = Math.floor(r % 3)
+                bCol = Math.floor(c % 3)
+                cell = blocks.itemAt(b).getCell(bRow, bCol)
+                if (cell === null || cell.value !== null)
+                    continue
+                var pencil = 0
+                for (var val = 0; val < 9; val++) {
+                    if (blockList[b][val] || rowList[r][val] || colList[c][val])
+                        continue
+                    pencil = setBitValue(pencil, val, 1)
+                }
+                cell.pencil = pencil
+                s.setPencil(cell.row, cell.column, cell.pencil)
+                //console.log ("== row,col",r ,c ,"=> set pencil", pencil.toString(16))
+            }
+        }
+    }
+
     function giveHint() {
         var s    = S.getSudoku(modelId);
         var hint = s.getHint();
