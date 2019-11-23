@@ -77,6 +77,7 @@ Grid {
                 _currentSelection.pencil = 0
                 s.set(_currentSelection.row, _currentSelection.column, value);
                 s.setPencil(_currentSelection.row, _currentSelection.column, 0);
+                oBoard.onValueChanged()
             }
         }
 
@@ -341,6 +342,33 @@ Grid {
         }
 
         generateBoardInBackground();
+    }
+
+    function onValueChanged() {
+        var current = _currentSelection
+        if (current === null || current.value === null)
+            return
+        var s = S.getSudoku(modelId);
+
+        for(var b = 0; b < 9; b++) {
+            for(var c = 0; c < 9; c++) {
+                var cell = blocks.itemAt(b).cellAt(c)
+
+                //Don't update pencil if we clear value of current or if other cell has a value
+                if (cell === null || cell.value !== null)
+                    continue
+
+                //Clear pencil values matching the updated value for cells in the same row, col or block.
+                if (cell.block === current.block || cell.row === current.row || cell.column === current.column) {
+                    if(s.isInitialCell(cell.row, cell.column))
+                        continue;
+
+                    //console.log("Clear pencil: block", cell.block, "row", cell.row, "col", cell.column, "pencil", cell.pencil)
+                    cell.pencil = setBitValue(cell.pencil, current.value-1, 0)
+                    s.setPencil(cell.row, cell.column, cell.pencil)
+                }
+            }
+        }
     }
 
     Component.onCompleted: {

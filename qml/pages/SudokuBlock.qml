@@ -20,6 +20,7 @@ import Sailfish.Silica 1.0
 import "."
 
 Rectangle {
+    id: root
     property int cellSize
     property int blockNumber
     property bool dragEnabled: configurations.draggingEnabled
@@ -52,6 +53,7 @@ Rectangle {
                 color: isConflict ? Theme.secondaryHighlightColor : "transparent"
 
                 property bool isHighlighted: false
+                property int block: root.blockNumber
                 property int row:    Math.floor(blockNumber / 3) * 3 + Math.floor(index / 3)
                 property int column: (blockNumber % 3) * 3 + (index % 3)
                 property int pencil: 0
@@ -196,5 +198,9 @@ Rectangle {
         var index = row * 3 + col;
 
         return cells.itemAt(index);
+    }
+
+    function cellAt(index) {
+        return cells.itemAt(index)
     }
 }
