@@ -24,6 +24,7 @@ Rectangle {
     property int cellSize
     property int blockNumber
     property bool dragEnabled: configurations.draggingEnabled
+    property var completed //List of number of completed [1-9] for entire board
 
     signal cellSelected (variant cell)
     signal entry (int value)
@@ -50,7 +51,9 @@ Rectangle {
                 height: cellSize
                 border.color: isHighlighted ? Theme.highlightColor : Theme.primaryColor
                 border.width: isHighlighted ? Math.max(Math.round(3/50*cellSize),2) : Math.max(Math.round(1/50*cellSize),1)
-                color: isConflict ? Theme.secondaryHighlightColor : "transparent"
+                color: isConflict ? Theme.secondaryHighlightColor :
+                       (value !== null && root.completed[value-1] === 9) ? Theme.highlightDimmerColor:
+                                                     "transparent"
 
                 property bool isHighlighted: false
                 property int block: root.blockNumber

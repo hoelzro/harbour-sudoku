@@ -36,6 +36,7 @@ Grid {
     property bool inactive: Qt.application.state === Qt.ApplicationInactive
     property bool staticBoard: false
     property bool pencilEnabled: false
+    property var completed: [0,0,0,0,0,0,0,0,0] //List of number of completed [1-9] for entire board
 
     property var sudokuWorker: null
 
@@ -119,6 +120,7 @@ Grid {
         SudokuBlock {
             cellSize: parent.cellSize
             blockNumber: index
+            completed: oBoard.completed
 
             onCellSelected: {
                 if(_currentSelection) {
@@ -337,6 +339,8 @@ Grid {
                     rows: rows,
                     bg:   false
                 });
+                if (!staticBoard)
+                    oBoard.onValueChanged() //Update 'completed' values
                 return isSetup = true;
             }
         }
@@ -346,16 +350,20 @@ Grid {
 
     function onValueChanged() {
         var current = _currentSelection
-        if (current === null || current.value === null)
-            return
+        var completed = [0,0,0,0,0,0,0,0,0]
         var s = S.getSudoku(modelId);
 
         for(var b = 0; b < 9; b++) {
             for(var c = 0; c < 9; c++) {
                 var cell = blocks.itemAt(b).cellAt(c)
+                if (cell === null)
+                    continue
+
+                if (cell.value !== null)
+                    completed[cell.value-1]++
 
                 //Don't update pencil if we clear value of current or if other cell has a value
-                if (cell === null || cell.value !== null)
+                if (current === null || current.value === null || cell.value !== null)
                     continue
 
                 //Clear pencil values matching the updated value for cells in the same row, col or block.
@@ -369,6 +377,7 @@ Grid {
                 }
             }
         }
+        oBoard.completed = completed
     }
 
     Component.onCompleted: {
