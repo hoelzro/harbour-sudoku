@@ -25,6 +25,7 @@ Rectangle {
     property int blockNumber
     property bool dragEnabled: configurations.draggingEnabled
     property var completed //List of number of completed [1-9] for entire board
+    property int selectedNumber: 0
 
     signal cellSelected (variant cell)
     signal entry (int value)
@@ -52,7 +53,8 @@ Rectangle {
                 border.color: isHighlighted ? Theme.highlightColor : Theme.primaryColor
                 border.width: isHighlighted ? Math.max(Math.round(3/50*cellSize),2) : Math.max(Math.round(1/50*cellSize),1)
                 color: isConflict ? Theme.secondaryHighlightColor :
-                       (value !== null && root.completed[value-1] === 9) ? Theme.highlightDimmerColor:
+                       matchSelectedNumber ? Theme.highlightColor:
+                       isCompleted ? Theme.highlightDimmerColor:
                                                      "transparent"
 
                 property bool isHighlighted: false
@@ -61,6 +63,9 @@ Rectangle {
                 property int column: (blockNumber % 3) * 3 + (index % 3)
                 property int pencil: 0
                 property variant value: null
+                readonly property bool isCompleted: value !== null && root.completed[value-1] === 9
+                readonly property bool matchSelectedNumber: (value !== null && value === root.selectedNumber) ||
+                                                            (root.selectedNumber > 0 && (pencil & 1 << root.selectedNumber-1))
                 onValueChanged: {
                     if (value === null) {
                         selfLabel.state = "Empty"
@@ -84,7 +89,7 @@ Rectangle {
                 Text {
                     id: selfLabel
                     anchors.centerIn: parent
-                    color: isInitial ? Theme.primaryColor : Theme.highlightColor
+                    color: isInitial || self.matchSelectedNumber ? Theme.primaryColor : Theme.highlightColor
                     font.pointSize: Math.round(cellSize * (24/50))
 
                     onTextChanged: {

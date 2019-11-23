@@ -121,6 +121,8 @@ Grid {
             cellSize: parent.cellSize
             blockNumber: index
             completed: oBoard.completed
+            selectedNumber: (oBoard._currentSelection !== null &&
+                             oBoard._currentSelection.value !== null) ? oBoard._currentSelection.value : 0
 
             onCellSelected: {
                 if(_currentSelection) {
