@@ -20,9 +20,12 @@ import Sailfish.Silica 1.0
 import "."
 
 Rectangle {
+    id: root
     property int cellSize
     property int blockNumber
     property bool dragEnabled: configurations.draggingEnabled
+    property var completed //List of number of completed [1-9] for entire board
+    property int selectedNumber: 0
 
     signal cellSelected (variant cell)
     signal entry (int value)
@@ -48,13 +51,21 @@ Rectangle {
                 width: cellSize
                 height: cellSize
                 border.color: isHighlighted ? Theme.highlightColor : Theme.primaryColor
-                border.width: isHighlighted ? Math.max(Math.round(5/50*cellSize),3) : Math.max(Math.round(1/50*cellSize),1)
-                color: isConflict ? Theme.secondaryHighlightColor : "transparent"
+                border.width: isHighlighted ? Math.max(Math.round(3/50*cellSize),2) : Math.max(Math.round(1/50*cellSize),1)
+                color: isConflict ? Theme.secondaryHighlightColor :
+                       matchSelectedNumber ? Theme.highlightColor:
+                       isCompleted ? Theme.highlightDimmerColor:
+                                                     "transparent"
 
                 property bool isHighlighted: false
+                property int block: root.blockNumber
                 property int row:    Math.floor(blockNumber / 3) * 3 + Math.floor(index / 3)
                 property int column: (blockNumber % 3) * 3 + (index % 3)
+                property int pencil: 0
                 property variant value: null
+                readonly property bool isCompleted: value !== null && root.completed[value-1] === 9
+                readonly property bool matchSelectedNumber: (value !== null && value === root.selectedNumber) ||
+                                                            (root.selectedNumber > 0 && (pencil & 1 << root.selectedNumber-1))
                 onValueChanged: {
                     if (value === null) {
                         selfLabel.state = "Empty"
@@ -63,15 +74,22 @@ Rectangle {
                         selfLabel.state = ""
                         selfLabel.text = '' + value
                     }
+                    pencil = 0
                 }
 
                 property bool isConflict: false
                 property bool isInitial: false
 
+                PencilOverlay {
+                    id: pencilOverlay
+                    anchors.fill: parent
+                    value: self.pencil
+                    visible: selfLabel.state === "Empty"                }
+
                 Text {
                     id: selfLabel
                     anchors.centerIn: parent
-                    color: isInitial ? Theme.primaryColor : Theme.highlightColor
+                    color: isInitial || self.matchSelectedNumber ? Theme.primaryColor : Theme.highlightColor
                     font.pointSize: Math.round(cellSize * (24/50))
 
                     onTextChanged: {
@@ -160,13 +178,14 @@ Rectangle {
         }
     }
 
-    function set(row, col, value, isInitial) {
+    function set(row, col, value, isInitial, pencil) {
         var index = row * 3 + col;
         var cell  = cells.itemAt(index);
 
         // XXX can we update the current binding?
         cell.value     = Qt.binding(function() { return value; });
         cell.isInitial = isInitial;
+        cell.pencil = pencil;
     }
 
     function markAsConflict(row, col) {
@@ -187,5 +206,9 @@ Rectangle {
         var index = row * 3 + col;
 
         return cells.itemAt(index);
+    }
+
+    function cellAt(index) {
+        return cells.itemAt(index)
     }
 }

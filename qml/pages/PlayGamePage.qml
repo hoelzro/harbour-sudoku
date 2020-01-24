@@ -35,6 +35,7 @@ Page {
             x: (Screen.width - width)/2
             cellSize: (Screen.width - 2*y - 2*board.spacing) / 9
             focus: true
+            pencilEnabled: numinput.item ? numinput.item.pencilEnabled : false
             onInactiveChanged: {
                 if (isSetup) {
                     if (inactive) {
@@ -61,6 +62,8 @@ Page {
             anchors.verticalCenter: page.isLandscape ? parent.verticalCenter : undefined
             anchors.horizontalCenter: page.isLandscape ? undefined : parent.horizontalCenter
             onLoaded: {
+                if (item)
+                    item.pencilEnabled
             }
         }
 
@@ -274,6 +277,12 @@ Page {
                 text: "Give Me a Hint"
                 onClicked: {
                     board.giveHint();
+                }
+            }
+            MenuItem {
+                text: "Fill in pencil values"
+                onClicked: {
+                    board.generatePencilValues();
                 }
             }
             MenuItem {

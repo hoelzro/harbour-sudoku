@@ -182,6 +182,8 @@ var exports = (function() {
         this.row    = row;
         this.column = column;
         this.value  = null;
+        this.pencil = 0; //Bit field using 9 bits
+
     };
 
     Cell.prototype.getRow = function getRow() {
@@ -202,6 +204,14 @@ var exports = (function() {
 
     Cell.prototype.setValue = function setValue(value) {
         return this.value = value;
+    };
+
+    Cell.prototype.getPencil = function getPencil() {
+        return this.pencil;
+    };
+
+    Cell.prototype.setPencil = function setPencil(value) {
+        return this.pencil = value;
     };
 
     Cell.prototype.toString = function toString() {
@@ -403,6 +413,12 @@ var exports = (function() {
 
     Sudoku.prototype.get = function get(row, col) {
         return this.cells[row][col].getValue();
+    };
+    Sudoku.prototype.setPencil = function setPencil(row, col, value) {
+        this.cells[row][col].setPencil(value);
+    }
+    Sudoku.prototype.getPencil = function getPencil(row, col) {
+        return this.cells[row][col].getPencil();
     };
 
     var findRelatedCells = function findRelatedCells(s) {
@@ -746,6 +762,7 @@ function makeSudoku(rows) {
                 // Hard-coded GRID_SIZE =(
                 s.initialCells[rows[i].row * 9 + rows[i].column] = true;
             }
+            s.setPencil(rows[i].row, rows[i].column, rows[i].pencil);
         }
     } else {
         s.generate(0);
@@ -775,13 +792,15 @@ if(typeof(WorkerScript) !== 'undefined') {
         for(var row = 0; row < 9; row++) {
             for(var col = 0; col < 9; col++) {
                 var value = s.get(row, col);
+                var pencil = s.getPencil(row, col);
 
                 if(value !== null) {
                     rows.push({
                         row: row,
                         column: col,
                         value: value,
-                        isInitial: true
+                        isInitial: true,
+                        pencil: pencil
                     });
                 }
             }

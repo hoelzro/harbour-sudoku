@@ -23,6 +23,7 @@ Item {
     signal entry(int value)
     property var dragComponent
     property bool eraseEnabled
+    property bool pencilEnabled: false //Todo: implement
     property bool dragEnabled: configurations.draggingEnabled
     height:numpad.height
     width:numpad.width
