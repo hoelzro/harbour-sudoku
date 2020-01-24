@@ -1,3 +1,7 @@
+0.6 2020-01-23
+    - Add "pencil in" UI for attaching multiple guesses to a cell (thanks decon4!)
+    - Add highlighting UI for showing other cells with the same value (thanks decon4!)
+
 0.5 2017-10-31
     - Improved support for tablets (thanks Ingvix!)
     - Added optional drag 'n' drog support (thanks Ingvix!)
